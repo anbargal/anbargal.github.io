@@ -13,7 +13,7 @@
 | `ragam` | string \| null | Ragam, in Tamil |
 | `thalam` | string \| null | Thalam, in Tamil |
 | `kshetram` | string \| null | Murugan kshetram, in Tamil; `null` for non-kshetram songs (e.g. the Vinayagar invocation) |
-| `stanzas` | object | `pallavi`: string[]; `charanams`: string[][] (one array of lines per charanam) |
+| `stanzas` | object | `santham`: string[]; `charanams`: string[][] (one array of lines per charanam) |
 | `youtube` | string[] | YouTube URLs for performances of the song |
 
 ## Example
@@ -28,18 +28,19 @@
   "thalam": "ஆதி",
   "kshetram": null,
   "stanzas": {
-    "pallavi": ["தத்தன தனதன தத்தன தனதன", "தத்தன தனதன – தனதான"],
+    "santham": ["தத்தன தனதன தத்தன தனதன", "தத்தன தனதன – தனதான"],
     "charanams": [
       ["கைத்தல நிறைகனி அப்பமொ டவல்பொரி", "கப்பிய கரிமுகன் – அடிபேணிக்"]
     ]
   },
-  "youtube": ["https://www.youtube.com/watch?v=R5QQO1CWBas"]
+  "youtube": ["https://www.youtube.com/watch?v=QwZ4HGgcFz8"]
 }
 ```
 
 ## Conventions
 
+- YouTube links are the `Amudha Thirupugaz padalgal - nnn` videos on the [Kalakad Thiruppugazh N.S. Mani](https://www.youtube.com/@KalakadThiruppugazhNSMani) channel, where `nnn` is the TIV number. Locate one by searching YouTube for `Amudha Thirupugaz padalgal - nnn`; take the result only if its title matches that pattern (e.g. TIV 1 → `Amudha Thirupugaz padalgal - 001`).
 - Lyrics are verbatim from `dist/<kaumaram>/lyrics.txt`, split into lines by blank-line-separated stanzas.
-- `stanzas.pallavi` is always the opening (solfa/“tattana” line); every following stanza is a charanam.
+- `stanzas.santham` is always the opening (solfa/“tattana” line); every following stanza is a charanam.
 - The final charanam ends with “… பெருமாளே.”
 - Ragam/thalam follow the TIV attribution (e.g. thiruppugazh-nectar, Project Madurai).
