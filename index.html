@@ -1,12 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Muruga Sharanam</title>
   <meta name="description" content="Muruga Sharanam landing page">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      margin: 0 auto;
+      max-width: 46rem;
+      padding: 1.5rem;
+      line-height: 1.6;
+    }
+    h1 { margin-bottom: 0.25rem; }
+    #status { color: #777; }
+    ul.songs { list-style: none; padding: 0; }
+    li.song {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    .tiv {
+      display: inline-block;
+      min-width: 2.5rem;
+      font-weight: 600;
+      color: #b45309;
+    }
+    .title { font-weight: 600; }
+    .title-en { color: #666; }
+    .meta { color: #888; font-size: 0.9rem; margin-top: 0.15rem; }
+  </style>
 </head>
 <body>
   <h1>Muruga Sharanam</h1>
+  <p id="status">Loading songs…</p>
+  <ul class="songs" id="songs"></ul>
+
+  <script>
+    (async () => {
+      const status = document.getElementById("status");
+      const list = document.getElementById("songs");
+      try {
+        const res = await fetch("data/thiruppugazh.jsonl");
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const text = await res.text();
+        const songs = text.trim().split("\n").filter(Boolean).map(JSON.parse);
+        status.textContent = songs.length + " song(s)";
+        const frag = document.createDocumentFragment();
+        for (const s of songs) {
+          const li = document.createElement("li");
+          li.className = "song";
+
+          const tiv = document.createElement("span");
+          tiv.className = "tiv";
+          tiv.textContent = String(s.tiv).padStart(3, "0");
+
+          const title = document.createElement("span");
+          title.className = "title";
+          title.textContent = s.title;
+          title.lang = "ta";
+
+          const titleEn = document.createElement("span");
+          titleEn.className = "title-en";
+          titleEn.textContent = " — " + s.title_en;
+
+          li.append(tiv, title, titleEn);
+
+          const meta = document.createElement("div");
+          meta.className = "meta";
+          const parts = [];
+          if (s.ragam) parts.push("ராகம்: " + s.ragam);
+          if (s.thalam) parts.push("தாளம்: " + s.thalam);
+          if (s.kshetram) parts.push(s.kshetram);
+          if (parts.length) meta.textContent = parts.join(" · ");
+          if (s.youtube && s.youtube.length) {
+            const a = document.createElement("a");
+            a.href = s.youtube[0];
+            a.textContent = " ▶ YouTube";
+            meta.appendChild(a);
+          }
+          li.appendChild(meta);
+
+          frag.appendChild(li);
+        }
+        list.appendChild(frag);
+      } catch (err) {
+        status.textContent = "Failed to load songs: " + err.message;
+      }
+    })();
+  </script>
 </body>
 </html>
