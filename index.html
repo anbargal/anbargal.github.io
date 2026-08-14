@@ -45,6 +45,7 @@
         if (!res.ok) throw new Error("HTTP " + res.status);
         const text = await res.text();
         const songs = text.trim().split("\n").filter(Boolean).map(JSON.parse);
+        songs.sort((a, b) => a.tiv - b.tiv);
         status.textContent = songs.length + " song(s)";
         const frag = document.createDocumentFragment();
         for (const s of songs) {
