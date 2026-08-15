@@ -29,21 +29,64 @@
       border-color: #b45309;
       box-shadow: 0 0 0 2px rgba(180, 83, 9, 0.15);
     }
-    ul.songs { list-style: none; padding: 0; }
-    li.song {
-      padding: 0.75rem 0;
+    table.songs {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    table.songs th {
+      text-align: left;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #888;
+      padding: 0 0.5rem 0.25rem;
       border-bottom: 1px solid #e5e5e5;
     }
-    .tiv {
-      display: inline-block;
-      min-width: 2.5rem;
+    table.songs th:nth-child(1) { width: 3.25rem; }
+    table.songs th:nth-child(3) { width: 3.25rem; }
+    table.songs td {
+      padding: 0.6rem 0.5rem;
+      border-bottom: 1px solid #e5e5e5;
+      vertical-align: top;
+    }
+    td.tiv {
       font-weight: 600;
       color: #b45309;
+    }
+    td.title-cell {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    td.yt-cell {
+      width: 3.25rem;
+      text-align: center;
     }
     .title { font-weight: 600; cursor: pointer; }
     .title:hover { text-decoration: underline; }
     .title-en { color: #666; }
     .meta { color: #888; font-size: 0.9rem; margin-top: 0.15rem; }
+    .yt-link { display: inline-block; }
+    .yt-link svg {
+      display: block;
+      width: 24px;
+      height: 24px;
+    }
+    .yt-link:focus-visible {
+      outline: 2px solid #b45309;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
     .overlay {
       position: fixed;
       inset: 0;
@@ -102,7 +145,16 @@
   <h1>Muruga Sharanam</h1>
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
-  <ul class="songs" id="songs"></ul>
+  <table class="songs">
+    <thead>
+      <tr>
+        <th scope="col">TIV</th>
+        <th scope="col">பாடல்</th>
+        <th scope="col"><span class="visually-hidden">YouTube</span></th>
+      </tr>
+    </thead>
+    <tbody id="songs"></tbody>
+  </table>
 
   <div class="overlay hidden" id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
     <div class="modal">
@@ -120,7 +172,7 @@
   <script>
     (async () => {
       const status = document.getElementById("status");
-      const list = document.getElementById("songs");
+      const tbody = document.getElementById("songs");
       const search = document.getElementById("search");
       let songs = [];
       try {
@@ -190,15 +242,17 @@
         status.textContent = shown.length === songs.length
           ? songs.length + " song(s)"
           : shown.length + " of " + songs.length + " song(s)";
-        list.textContent = "";
+        tbody.textContent = "";
         const frag = document.createDocumentFragment();
         for (const s of shown) {
-          const li = document.createElement("li");
-          li.className = "song";
+          const tr = document.createElement("tr");
 
-          const tiv = document.createElement("span");
+          const tiv = document.createElement("td");
           tiv.className = "tiv";
           tiv.textContent = String(s.tiv).padStart(3, "0");
+
+          const titleCell = document.createElement("td");
+          titleCell.className = "title-cell";
 
           const title = document.createElement("span");
           title.className = "title";
@@ -215,7 +269,7 @@
           titleEn.className = "title-en";
           titleEn.textContent = " — " + s.title_en;
 
-          li.append(tiv, title, titleEn);
+          titleCell.append(title, titleEn);
 
           const meta = document.createElement("div");
           meta.className = "meta";
@@ -224,17 +278,27 @@
           if (s.thalam) parts.push("தாளம்: " + s.thalam);
           if (s.kshetram) parts.push(s.kshetram);
           if (parts.length) meta.textContent = parts.join(" · ");
+          if (parts.length) titleCell.appendChild(meta);
+
+          const ytCell = document.createElement("td");
+          ytCell.className = "yt-cell";
           if (s.youtube && s.youtube.length) {
             const a = document.createElement("a");
+            a.className = "yt-link";
             a.href = s.youtube[0];
-            a.textContent = " ▶ YouTube";
-            meta.appendChild(a);
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.setAttribute("aria-label", "YouTube: " + (s.title || ""));
+            a.title = "YouTube";
+            a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+              + '<path fill="#FF0000" d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>';
+            ytCell.appendChild(a);
           }
-          li.appendChild(meta);
 
-          frag.appendChild(li);
+          tr.append(tiv, titleCell, ytCell);
+          frag.appendChild(tr);
         }
-        list.appendChild(frag);
+        tbody.appendChild(frag);
       }
 
       const overlay = document.getElementById("overlay");
