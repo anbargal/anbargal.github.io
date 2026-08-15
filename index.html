@@ -40,9 +40,62 @@
       font-weight: 600;
       color: #b45309;
     }
-    .title { font-weight: 600; }
+    .title { font-weight: 600; cursor: pointer; }
+    .title:hover { text-decoration: underline; }
     .title-en { color: #666; }
     .meta { color: #888; font-size: 0.9rem; margin-top: 0.15rem; }
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 100;
+    }
+    .overlay.hidden { display: none; }
+    .modal {
+      background: #fff;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 42rem;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    .modal-header {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      border-bottom: 1px solid #eee;
+      padding: 1rem 1.5rem;
+    }
+    .modal-header h2 { margin: 0; font-size: 1.2rem; }
+    .close {
+      border: none;
+      background: #f0f0f0;
+      border-radius: 50%;
+      width: 2rem;
+      height: 2rem;
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .close:hover { background: #e0e0e0; }
+    .modal-body { padding: 1rem 1.5rem 2rem; }
+    .modal-body h3 {
+      margin: 1.25rem 0 0.5rem;
+      color: #b45309;
+      font-size: 1rem;
+    }
+    .modal-body p { margin: 0 0 0.25rem; }
+    .charanam { margin-top: 1.25rem; }
   </style>
 </head>
 <body>
@@ -50,6 +103,19 @@
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
   <ul class="songs" id="songs"></ul>
+
+  <div class="overlay hidden" id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="overlay-title" lang="ta"></h2>
+          <div class="meta" id="overlay-meta"></div>
+        </div>
+        <button class="close" id="overlay-close" aria-label="மூடு / Close">×</button>
+      </div>
+      <div class="modal-body" id="overlay-lyrics"></div>
+    </div>
+  </div>
 
   <script>
     (async () => {
@@ -138,6 +204,12 @@
           title.className = "title";
           title.textContent = s.title;
           title.lang = "ta";
+          title.tabIndex = 0;
+          title.setAttribute("role", "button");
+          title.addEventListener("click", () => openOverlay(s));
+          title.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openOverlay(s); }
+          });
 
           const titleEn = document.createElement("span");
           titleEn.className = "title-en";
@@ -164,6 +236,67 @@
         }
         list.appendChild(frag);
       }
+
+      const overlay = document.getElementById("overlay");
+      const overlayTitle = document.getElementById("overlay-title");
+      const overlayMeta = document.getElementById("overlay-meta");
+      const overlayLyrics = document.getElementById("overlay-lyrics");
+      const overlayClose = document.getElementById("overlay-close");
+
+      function openOverlay(s) {
+        overlayTitle.textContent = s.title;
+        const parts = [];
+        if (s.ragam) parts.push("ராகம்: " + s.ragam);
+        if (s.thalam) parts.push("தாளம்: " + s.thalam);
+        if (s.kshetram) parts.push("க்ஷேத்திரம்: " + s.kshetram);
+        overlayMeta.textContent = parts.join(" · ");
+
+        overlayLyrics.textContent = "";
+        if (s.stanzas) {
+          if (s.stanzas.santham && s.stanzas.santham.length) {
+            const h = document.createElement("h3");
+            h.textContent = "சந்தம்";
+            overlayLyrics.appendChild(h);
+            for (const line of s.stanzas.santham) {
+              const p = document.createElement("p");
+              p.textContent = line;
+              overlayLyrics.appendChild(p);
+            }
+          }
+          if (s.stanzas.charanams && s.stanzas.charanams.length) {
+            const h = document.createElement("h3");
+            h.textContent = "பாடல்";
+            overlayLyrics.appendChild(h);
+            for (const ch of s.stanzas.charanams) {
+              const div = document.createElement("div");
+              div.className = "charanam";
+              for (const line of ch) {
+                const p = document.createElement("p");
+                p.textContent = line;
+                div.appendChild(p);
+              }
+              overlayLyrics.appendChild(div);
+            }
+          }
+        }
+
+        overlay.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        overlayClose.focus();
+      }
+
+      function closeOverlay() {
+        overlay.classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+
+      overlayClose.addEventListener("click", closeOverlay);
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closeOverlay();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !overlay.classList.contains("hidden")) closeOverlay();
+      });
     })();
   </script>
 </body>
