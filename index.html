@@ -15,6 +15,20 @@
     }
     h1 { margin-bottom: 0.25rem; }
     #status { color: #777; }
+    #search {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    #search:focus {
+      outline: none;
+      border-color: #b45309;
+      box-shadow: 0 0 0 2px rgba(180, 83, 9, 0.15);
+    }
     ul.songs { list-style: none; padding: 0; }
     li.song {
       padding: 0.75rem 0;
@@ -33,6 +47,7 @@
 </head>
 <body>
   <h1>Muruga Sharanam</h1>
+  <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
   <ul class="songs" id="songs"></ul>
 
@@ -40,15 +55,78 @@
     (async () => {
       const status = document.getElementById("status");
       const list = document.getElementById("songs");
+      const search = document.getElementById("search");
+      let songs = [];
       try {
         const res = await fetch("data/thiruppugazh.jsonl");
         if (!res.ok) throw new Error("HTTP " + res.status);
         const text = await res.text();
-        const songs = text.trim().split("\n").filter(Boolean).map(JSON.parse);
-        songs.sort((a, b) => a.tiv - b.tiv);
-        status.textContent = songs.length + " song(s)";
-        const frag = document.createDocumentFragment();
+        songs = text.trim().split("\n").filter(Boolean).map(JSON.parse);
+        const byTiv = songs.slice().sort((a, b) => a.tiv - b.tiv);
+        search.addEventListener("input", () => render(filterSongs(search.value.trim())));
+        render(byTiv);
+      } catch (err) {
+        status.textContent = "Failed to load songs: " + err.message;
+      }
+
+      function searchTexts(s) {
+        const texts = [
+          { text: String(s.tiv), boost: true },
+          { text: String(s.kaumaram), boost: false },
+        ];
+        if (s.title) texts.push({ text: s.title, boost: true });
+        if (s.title_en) texts.push({ text: s.title_en, boost: true });
+        if (s.ragam) texts.push({ text: s.ragam, boost: false });
+        if (s.kshetram) texts.push({ text: s.kshetram, boost: false });
+        if (s.youtube) for (const u of s.youtube) texts.push({ text: u, boost: false });
+        if (s.stanzas) {
+          for (const line of s.stanzas.santham || []) texts.push({ text: line, boost: false });
+          for (const ch of s.stanzas.charanams || []) for (const line of ch) texts.push({ text: line, boost: false });
+        }
+        return texts;
+      }
+
+      function fuzzyScore(query, target) {
+        query = query.toLowerCase();
+        target = target.toLowerCase();
+        let q = 0, score = 0, consecutive = 0, prev = -2;
+        for (let t = 0; t < target.length && q < query.length; t++) {
+          if (target[t] === query[q]) {
+            let bonus = 0;
+            if (t === 0) bonus = 5;
+            else if (/\s/.test(target[t - 1])) bonus = 3;
+            if (t === prev + 1) { consecutive++; bonus += 5 * consecutive; }
+            else consecutive = 1;
+            score += 1 + bonus;
+            prev = t;
+            q++;
+          }
+        }
+        return q === query.length ? score : -1;
+      }
+
+      function filterSongs(query) {
+        if (!query) return byTiv;
+        const scored = [];
         for (const s of songs) {
+          let best = -1;
+          for (const t of searchTexts(s)) {
+            const sc = fuzzyScore(query, t.text) * (t.boost ? 2 : 1);
+            if (sc > best) best = sc;
+          }
+          if (best >= 0) scored.push({ s, best });
+        }
+        scored.sort((a, b) => b.best - a.best);
+        return scored.map(x => x.s);
+      }
+
+      function render(shown) {
+        status.textContent = shown.length === songs.length
+          ? songs.length + " song(s)"
+          : shown.length + " of " + songs.length + " song(s)";
+        list.textContent = "";
+        const frag = document.createDocumentFragment();
+        for (const s of shown) {
           const li = document.createElement("li");
           li.className = "song";
 
@@ -85,8 +163,6 @@
           frag.appendChild(li);
         }
         list.appendChild(frag);
-      } catch (err) {
-        status.textContent = "Failed to load songs: " + err.message;
       }
     })();
   </script>
