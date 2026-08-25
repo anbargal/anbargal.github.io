@@ -14,6 +14,25 @@
       line-height: 1.6;
     }
     h1 { margin-bottom: 0.25rem; }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .bhajan-link {
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #b45309;
+      border: 1px solid #b45309;
+      border-radius: 6px;
+      padding: 0.35rem 0.75rem;
+      white-space: nowrap;
+    }
+    .bhajan-link:hover {
+      background: #b45309;
+      color: #fff;
+    }
     #status { color: #777; }
     #search {
       width: 100%;
@@ -145,7 +164,10 @@
   </style>
 </head>
 <body>
-  <h1>Muruga Sharanam</h1>
+  <div class="header-row">
+    <h1>Muruga Sharanam</h1>
+    <a href="bhajan-lists.html" class="bhajan-link">Bhajan Lists</a>
+  </div>
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
   <table class="songs">
