@@ -12,6 +12,11 @@
 
 - [ ] Check song 172.
 
+### TIV 226-235 Batch
+
+- [ ] Ragam spellings for TIV 227 (பிருந்தாவன சாரங்கா) and TIV 230 (சிந்து பைரவி) were aligned to the DB's existing conventions (blogspot renders them ஸாரங்கா / சிந்துபைரவி). Confirm these are as intended.
+- [ ] Verify lyrics accuracy in all charanams for the batch.
+
 ### TIV 216-225 Batch
 
 - [ ] **TIV 218** — ragam "சநதிரகெளன்ஸ்" is how thiruppugazh-nectar renders it — looks like a typo (likely சந்திரகௌளை). Verify/correct.
