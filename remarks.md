@@ -12,6 +12,12 @@
 
 - [ ] Check song 172.
 
+### TIV 216-225 Batch
+
+- [ ] **TIV 218** — ragam "சநதிரகெளன்ஸ்" is how thiruppugazh-nectar renders it — looks like a typo (likely சந்திரகௌளை). Verify/correct.
+- [ ] **TIV 223** — kshetram set to "கோடி" (kaumaram lists "கோடி..குழகர் கோயில்").
+- [ ] Verify lyrics accuracy in all charanams for the batch.
+
 ### TIV 191-215 Batch
 
 - [ ] **TIV 200 (தூதாளரோடு)** — skipped during onboarding of TIV 191-215.
