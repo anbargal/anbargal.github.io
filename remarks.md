@@ -11,9 +11,6 @@
 ### TIV 166-190 Batch
 
 - [ ] Check song 172.
-- [ ] Check 173 - sakti or satthi?
-- [ ] Check 180 - pathargana or baktagana?
-- [ ] Review and push 166-190 TIVs.
 
 ### TIV 191-215 Batch
 
