@@ -8,6 +8,22 @@
 - [ ] Check whether the word is "boomi" (பூமி) or "puvi" (புவி) - currently shows "புமி" in database.
 - [ ] Verify accuracy of all charanams.
 
+### TIV 166-190 Batch
+
+- [ ] Check song 172.
+- [ ] Check 173 - sakti or satthi?
+- [ ] Check 180 - pathargana or baktagana?
+- [ ] Review and push 166-190 TIVs.
+
+### TIV 191-215 Batch
+
+- [ ] **TIV 200 (தூதாளரோடு)** — skipped during onboarding of TIV 191-215.
+  - Not present in the kaumaram.com numbered database; kaumaram index could not be derived by title matching.
+  - விராலிமலை (VirAlimalai) song about Yama (காலன்) and his messengers being frightened.
+  - Ragam: சஹானா, Thalam: 7½ (2½ + 1½ + 1½ + 2).
+  - Lyrics available on the blogspot page: http://thiruppugazh-nectar.blogspot.com/2015/12/200.thoothalaodu.html
+  - Needs kaumaram index confirmed from an alternate source before onboarding.
+
 ---
 
 ## Resolved
