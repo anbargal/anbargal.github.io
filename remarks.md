@@ -17,13 +17,20 @@
 - [ ] Ragam spellings for TIV 227 (பிருந்தாவன சாரங்கா) and TIV 230 (சிந்து பைரவி) were aligned to the DB's existing conventions (blogspot renders them ஸாரங்கா / சிந்துபைரவி). Confirm these are as intended.
 - [ ] Verify lyrics accuracy in all charanams for the batch.
 
+### TIV 239 — Uiriyadhava Neri
+
+- [ ] Lyrics need verification — the thiruppugazh-nectar blogspot page (239.uriyathava.html) appears to contain lines from two different songs:
+  - "உரியதவ நெறியில்..." (main, ends பெருமாளே)
+  - "இரவினிடை துயிலுகினும்... யருள்வாயே"
+  - The TIV 239 page pairs "உரிய தவநெறி" with the "அருள்வாயே" refrain — verify which lyrics actually belong to this song.
+
 ### TIV 216-225 Batch
 
 - [ ] **TIV 218** — ragam "சநதிரகெளன்ஸ்" is how thiruppugazh-nectar renders it — looks like a typo (likely சந்திரகௌளை). Verify/correct.
 - [ ] **TIV 223** — kshetram set to "கோடி" (kaumaram lists "கோடி..குழகர் கோயில்").
 - [ ] Verify lyrics accuracy in all charanams for the batch.
 
-### TIV 191-215 Batch
+### TIV 200
 
 - [ ] **TIV 200 (தூதாளரோடு)** — skipped during onboarding of TIV 191-215.
   - Not present in the kaumaram.com numbered database; kaumaram index could not be derived by title matching.
