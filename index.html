@@ -161,12 +161,177 @@
     }
     .modal-body p { margin: 0 0 0.25rem; }
     .charanam { margin-top: 1.25rem; }
+    .create-list-btn {
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+      background: #b45309;
+      border: 1px solid #b45309;
+      border-radius: 6px;
+      padding: 0.35rem 0.75rem;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .create-list-btn:hover {
+      background: #9a3412;
+      color: #fff;
+    }
+    .selection-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 200;
+    }
+    .selection-overlay.hidden { display: none; }
+    .selection-modal {
+      background: #fff;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 42rem;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    .selection-modal-header {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid #eee;
+      padding: 1rem 1.5rem;
+    }
+    .selection-modal-header h2 { margin: 0; font-size: 1.2rem; }
+    .selection-modal-body { padding: 1rem 1.5rem 2rem; }
+    .select-all-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .select-all-row button {
+      padding: 0.4rem 0.75rem;
+      border: 1px solid #b45309;
+      border-radius: 6px;
+      background: #fff;
+      color: #b45309;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .select-all-row button:hover {
+      background: #b45309;
+      color: #fff;
+    }
+    .song-check-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .song-check-row input[type="checkbox"] {
+      width: 1.1rem;
+      height: 1.1rem;
+      cursor: pointer;
+    }
+    .song-check-row .check-tiv {
+      font-weight: 600;
+      color: #b45309;
+      min-width: 3rem;
+      font-size: 0.9rem;
+    }
+    .song-check-row .check-title {
+      flex: 1;
+      overflow-wrap: anywhere;
+    }
+    .song-check-row .check-title-en {
+      color: #666;
+      font-size: 0.85rem;
+    }
+    .selection-modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #eee;
+      padding: 1rem 1.5rem;
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+    }
+    .selection-modal-footer .count {
+      color: #888;
+      font-size: 0.9rem;
+    }
+    .selection-modal-footer .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .selection-modal-footer .actions button {
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .btn-generate {
+      background: #b45309;
+      color: #fff;
+      border: 1px solid #b45309;
+    }
+    .btn-generate:hover { background: #9a3412; }
+    .btn-cancel {
+      background: #f0f0f0;
+      color: #333;
+      border: 1px solid #ccc;
+    }
+    .btn-cancel:hover { background: #e0e0e0; }
+    .share-link-box {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .share-link-box input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+    .share-link-box button {
+      padding: 0.5rem 0.75rem;
+      background: #b45309;
+      color: #fff;
+      border: 1px solid #b45309;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .share-link-box button:hover { background: #9a3412; }
+    .filter-badge {
+      display: inline-block;
+      background: #b45309;
+      color: #fff;
+      border-radius: 6px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.8rem;
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
+    .filter-badge:hover { background: #9a3412; }
   </style>
 </head>
 <body>
   <div class="header-row">
     <h1>Muruga Sharanam</h1>
-    <a href="bhajan-lists.html" class="bhajan-link">Bhajan Lists</a>
+    <div style="display:flex;gap:0.5rem;align-items:center;">
+      <a href="bhajan-lists.html" class="bhajan-link">Bhajan Lists</a>
+      <button class="create-list-btn" id="open-selection">+ Create Bhajan List</button>
+    </div>
   </div>
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
@@ -180,6 +345,39 @@
     </thead>
     <tbody id="songs"></tbody>
   </table>
+
+  <div class="selection-overlay hidden" id="selection-overlay" role="dialog" aria-modal="true" aria-labelledby="selection-title">
+    <div class="selection-modal">
+      <div class="selection-modal-header">
+        <div>
+          <h2 id="selection-title">Select Songs</h2>
+          <div class="meta" id="selection-meta"></div>
+        </div>
+        <button class="close" id="selection-close" aria-label="Close">×</button>
+      </div>
+      <div class="selection-modal-body">
+        <div class="select-all-row">
+          <button type="button" id="select-all">Select All</button>
+          <button type="button" id="deselect-all">Deselect All</button>
+        </div>
+        <div id="selection-list"></div>
+      </div>
+      <div class="selection-modal-footer">
+        <span class="count" id="selection-count">0 songs selected</span>
+        <div class="actions">
+          <button class="btn-cancel" id="selection-cancel">Cancel</button>
+          <button class="btn-generate" id="selection-generate">Generate Link</button>
+        </div>
+      </div>
+      <div class="selection-modal-body" id="share-section" style="display:none;border-top:1px solid #eee;padding-top:1rem;">
+        <strong>Share this link:</strong>
+        <div class="share-link-box">
+          <input type="text" id="share-url" readonly>
+          <button type="button" id="copy-link">Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="overlay hidden" id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
     <div class="modal">
@@ -200,6 +398,7 @@
       const tbody = document.getElementById("songs");
       const search = document.getElementById("search");
       let songs = [];
+      let currentShown = [];
       try {
         const res = await fetch("data/thiruppugazh.jsonl");
         if (!res.ok) throw new Error("HTTP " + res.status);
@@ -263,13 +462,31 @@
         return scored.map(x => x.s);
       }
 
+      function filterByUrlTivs(list) {
+        if (urlTivs.size === 0) return list;
+        return list.filter(s => urlTivs.has(String(s.tiv).padStart(3, "0")));
+      }
+
       function render(shown) {
-        status.textContent = shown.length === songs.length
+        currentShown = shown;
+        const filtered = filterByUrlTivs(shown);
+        status.textContent = filtered.length === songs.length
           ? songs.length + " song(s)"
-          : shown.length + " of " + songs.length + " song(s)";
+          : filtered.length + " of " + songs.length + " song(s)";
+        if (urlTivs.size > 0) {
+          status.innerHTML += ' <span class="filter-badge" id="clear-filter">× Clear filter</span>';
+          const clearBtn = document.getElementById("clear-filter");
+          if (clearBtn) clearBtn.addEventListener("click", () => {
+            urlTivs.clear();
+            const url = new URL(window.location);
+            url.searchParams.delete("tivs");
+            window.history.replaceState({}, "", url);
+            render(currentShown);
+          });
+        }
         tbody.textContent = "";
         const frag = document.createDocumentFragment();
-        for (const s of shown) {
+        for (const s of filtered) {
           const tr = document.createElement("tr");
 
           const tiv = document.createElement("td");
@@ -331,60 +548,116 @@
       const overlayMeta = document.getElementById("overlay-meta");
       const overlayLyrics = document.getElementById("overlay-lyrics");
       const overlayClose = document.getElementById("overlay-close");
+      const selectionOverlay = document.getElementById("selection-overlay");
+      const selectionList = document.getElementById("selection-list");
+      const selectionCount = document.getElementById("selection-count");
+      const selectionMeta = document.getElementById("selection-meta");
+      const shareSection = document.getElementById("share-section");
+      const shareUrl = document.getElementById("share-url");
+      let selectedTivs = new Set();
+      let urlTivs = new Set();
 
-      function openOverlay(s) {
-        overlayTitle.textContent = s.title;
-        const parts = [];
-        if (s.ragam) parts.push("ராகம்: " + s.ragam);
-        if (s.thalam) parts.push("தாளம்: " + s.thalam);
-        if (s.kshetram) parts.push("க்ஷேத்திரம்: " + s.kshetram);
-        overlayMeta.textContent = parts.join(" · ");
-
-        overlayLyrics.textContent = "";
-        if (s.stanzas) {
-          if (s.stanzas.santham && s.stanzas.santham.length) {
-            const h = document.createElement("h3");
-            h.textContent = "சந்தம்";
-            overlayLyrics.appendChild(h);
-            for (const line of s.stanzas.santham) {
-              const p = document.createElement("p");
-              p.textContent = line;
-              overlayLyrics.appendChild(p);
-            }
-          }
-          if (s.stanzas.charanams && s.stanzas.charanams.length) {
-            const h = document.createElement("h3");
-            h.textContent = "பாடல்";
-            overlayLyrics.appendChild(h);
-            for (const ch of s.stanzas.charanams) {
-              const div = document.createElement("div");
-              div.className = "charanam";
-              for (const line of ch) {
-                const p = document.createElement("p");
-                p.textContent = line;
-                div.appendChild(p);
-              }
-              overlayLyrics.appendChild(div);
-            }
-          }
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const tivParam = params.get("tivs");
+        if (tivParam) {
+          urlTivs = new Set(tivParam.split(",").map(t => t.trim()));
         }
+      } catch(e) {}
 
-        overlay.classList.remove("hidden");
+      function openSelection() {
+        selectedTivs = new Set(urlTivs);
+        renderSelectionList();
+        selectionOverlay.classList.remove("hidden");
         document.body.style.overflow = "hidden";
-        overlayClose.focus();
       }
 
-      function closeOverlay() {
-        overlay.classList.add("hidden");
+      function closeSelection() {
+        selectionOverlay.classList.add("hidden");
         document.body.style.overflow = "";
       }
+
+      function renderSelectionList() {
+        selectionList.textContent = "";
+        let checkedCount = 0;
+        for (const s of byTiv) {
+          const tivStr = String(s.tiv).padStart(3, "0");
+          const row = document.createElement("div");
+          row.className = "song-check-row";
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.checked = selectedTivs.has(tivStr);
+          cb.addEventListener("change", () => {
+            if (cb.checked) selectedTivs.add(tivStr);
+            else selectedTivs.delete(tivStr);
+            updateCount();
+          });
+          const tivSpan = document.createElement("span");
+          tivSpan.className = "check-tiv";
+          tivSpan.textContent = tivStr;
+          const titleSpan = document.createElement("span");
+          titleSpan.className = "check-title";
+          titleSpan.textContent = s.title;
+          const titleEnSpan = document.createElement("span");
+          titleEnSpan.className = "check-title-en";
+          titleEnSpan.textContent = " — " + s.title_en;
+          titleSpan.appendChild(titleEnSpan);
+          row.append(cb, tivSpan, titleSpan);
+          selectionList.appendChild(row);
+          if (cb.checked) checkedCount++;
+        }
+        selectionMeta.textContent = checkedCount + " of " + songs.length + " song(s) selected";
+      }
+
+      function updateCount() {
+        selectionCount.textContent = selectedTivs.size + " song(s) selected";
+      }
+
+      function generateLink() {
+        const tivArray = Array.from(selectedTivs).sort();
+        const url = new URL(window.location);
+        if (tivArray.length > 0) {
+          url.searchParams.set("tivs", tivArray.join(","));
+        } else {
+          url.searchParams.delete("tivs");
+        }
+        const link = url.toString();
+        shareUrl.value = link;
+        shareSection.style.display = "";
+        window.history.replaceState({}, "", link);
+      }
+
+      document.getElementById("open-selection").addEventListener("click", openSelection);
+      document.getElementById("selection-close").addEventListener("click", closeSelection);
+      document.getElementById("selection-cancel").addEventListener("click", closeSelection);
+      selectionOverlay.addEventListener("click", (e) => {
+        if (e.target === selectionOverlay) closeSelection();
+      });
+      document.getElementById("select-all").addEventListener("click", () => {
+        for (const s of byTiv) selectedTivs.add(String(s.tiv).padStart(3, "0"));
+        renderSelectionList();
+      });
+      document.getElementById("deselect-all").addEventListener("click", () => {
+        selectedTivs.clear();
+        renderSelectionList();
+      });
+      document.getElementById("selection-generate").addEventListener("click", generateLink);
+      document.getElementById("copy-link").addEventListener("click", () => {
+        shareUrl.select();
+        navigator.clipboard.writeText(shareUrl.value).catch(() => {
+          document.execCommand("copy");
+        });
+      });
 
       overlayClose.addEventListener("click", closeOverlay);
       overlay.addEventListener("click", (e) => {
         if (e.target === overlay) closeOverlay();
       });
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !overlay.classList.contains("hidden")) closeOverlay();
+        if (e.key === "Escape") {
+          if (!selectionOverlay.classList.contains("hidden")) closeSelection();
+          else if (!overlay.classList.contains("hidden")) closeOverlay();
+        }
       });
     })();
   </script>
