@@ -397,9 +397,11 @@
       const status = document.getElementById("status");
       const tbody = document.getElementById("songs");
       const search = document.getElementById("search");
-      let songs = [];
-      let currentShown = [];
-      try {
+       let songs = [];
+       let currentShown = [];
+       let selectedTivs = new Set();
+       let urlTivs = new Set();
+       try {
         const res = await fetch("data/thiruppugazh.jsonl");
         if (!res.ok) throw new Error("HTTP " + res.status);
         const text = await res.text();
@@ -554,9 +556,6 @@
       const selectionMeta = document.getElementById("selection-meta");
       const shareSection = document.getElementById("share-section");
       const shareUrl = document.getElementById("share-url");
-      let selectedTivs = new Set();
-      let urlTivs = new Set();
-
       try {
         const params = new URLSearchParams(window.location.search);
         const tivParam = params.get("tivs");
