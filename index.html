@@ -406,6 +406,7 @@
        let byTiv = [];
        let selectedTivs = new Set();
        let urlTivs = new Set();
+       const linkDisplay = document.getElementById("link-display");
        try {
          const params = new URLSearchParams(window.location.search);
          const tivParam = params.get("tivs");
@@ -569,9 +570,8 @@
       const selectionList = document.getElementById("selection-list");
       const selectionCount = document.getElementById("selection-count");
       const selectionMeta = document.getElementById("selection-meta");
-      const shareSection = document.getElementById("share-section");
+       const shareSection = document.getElementById("share-section");
       const shareUrl = document.getElementById("share-url");
-      const linkDisplay = document.getElementById("link-display");
 
       function openSelection() {
         selectedTivs = new Set(urlTivs);
