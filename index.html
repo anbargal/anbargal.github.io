@@ -422,6 +422,17 @@
          }
          if (nameParam) {
            listName = decodeURIComponent(nameParam);
+           const url = window.location.href;
+           try {
+             const lists = JSON.parse(localStorage.getItem("bhajan_lists") || "[]");
+             const existing = lists.findIndex(l => l.url === url);
+             if (existing >= 0) {
+               lists[existing].count = (lists[existing].count || 1) + 1;
+             } else {
+               lists.push({ name: listName, url, count: 1, date: Date.now() });
+             }
+             localStorage.setItem("bhajan_lists", JSON.stringify(lists));
+           } catch(e) {}
          }
        } catch(e) {}
        try {

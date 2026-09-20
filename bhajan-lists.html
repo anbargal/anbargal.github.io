@@ -33,6 +33,83 @@
       background: #b45309;
       color: #fff;
     }
+    .empty-state {
+      color: #999;
+      font-style: italic;
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .list-card {
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: box-shadow 0.15s;
+    }
+    .list-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .list-card-title {
+      font-weight: 600;
+      color: #b45309;
+      font-size: 1.1rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .list-card-title:hover {
+      text-decoration: underline;
+    }
+    .list-card-meta {
+      color: #888;
+      font-size: 0.8rem;
+    }
+    .list-card-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .list-card-count {
+      background: #f0f0f0;
+      border-radius: 12px;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.75rem;
+      color: #666;
+    }
+    .btn-delete {
+      background: none;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      color: #999;
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.8rem;
+    }
+    .btn-delete:hover {
+      background: #ff4444;
+      color: #fff;
+      border-color: #ff4444;
+    }
+    .btn-clear-all {
+      padding: 0.4rem 1rem;
+      background: #b45309;
+      color: #fff;
+      border: 1px solid #b45309;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .btn-clear-all:hover {
+      background: #9a3412;
+    }
+    .header-row-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -40,5 +117,90 @@
     <h1>Bhajan Lists</h1>
     <a href="index.html" class="home-link">Home</a>
   </div>
+  <div id="lists-container"></div>
+  <div class="header-row-bottom">
+    <span id="list-count" style="color:#888; font-size:0.9rem;"></span>
+    <button class="btn-clear-all" id="clear-all">Clear All</button>
+  </div>
+  <script>
+    (function() {
+      function getLists() {
+        try {
+          return JSON.parse(localStorage.getItem("bhajan_lists") || "[]");
+        } catch(e) {
+          return [];
+        }
+      }
+
+      function saveLists(lists) {
+        localStorage.setItem("bhajan_lists", JSON.stringify(lists));
+      }
+
+      function renderLists() {
+        const container = document.getElementById("lists-container");
+        const countEl = document.getElementById("list-count");
+        const lists = getLists();
+        container.textContent = "";
+        countEl.textContent = lists.length + " list(s)";
+
+        if (lists.length === 0) {
+          container.innerHTML = '<p class="empty-state">No bhajan lists yet. Create one from the <a href="index.html">home page</a>.</p>';
+          return;
+        }
+
+        lists.sort(function(a, b) { return b.date - a.date; });
+        for (const list of lists) {
+          const card = document.createElement("div");
+          card.className = "list-card";
+
+          const left = document.createElement("div");
+          const title = document.createElement("a");
+          title.className = "list-card-title";
+          title.href = list.url;
+          title.textContent = list.name || "Untitled List";
+          title.addEventListener("click", function() {
+            // Increment count on visit
+            list.count = (list.count || 1) + 1;
+            saveLists(lists);
+            countEl.textContent = lists.length + " list(s)";
+          });
+          const meta = document.createElement("div");
+          meta.className = "list-card-meta";
+          meta.textContent = "Visited " + (list.count || 0) + " time(s)";
+          left.append(title, meta);
+
+          const actions = document.createElement("div");
+          actions.className = "list-card-actions";
+          const countBadge = document.createElement("span");
+          countBadge.className = "list-card-count";
+          countBadge.textContent = (list.count || 0) + " visits";
+          const delBtn = document.createElement("button");
+          delBtn.className = "btn-delete";
+          delBtn.textContent = "Remove";
+          delBtn.addEventListener("click", function() {
+            const idx = lists.indexOf(list);
+            if (idx >= 0) {
+              lists.splice(idx, 1);
+              saveLists(lists);
+              renderLists();
+            }
+          });
+          actions.append(countBadge, delBtn);
+
+          card.append(left, actions);
+          container.appendChild(card);
+        }
+      }
+
+      document.getElementById("clear-all").addEventListener("click", function() {
+        if (confirm("Clear all bhajan lists?")) {
+          localStorage.removeItem("bhajan_lists");
+          renderLists();
+        }
+      });
+
+      renderLists();
+    })();
+  </script>
 </body>
 </html>
