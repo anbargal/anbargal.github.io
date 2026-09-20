@@ -332,6 +332,7 @@
   </div>
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
+  <div id="list-name-display" style="display:none; font-size:1.1rem; font-weight:700; color:#b45309; margin-bottom:0.5rem;"></div>
   <table class="songs">
     <thead>
       <tr>
@@ -356,6 +357,10 @@
         <div class="select-all-row">
           <button type="button" id="select-all">Select All</button>
           <button type="button" id="deselect-all">Deselect All</button>
+        </div>
+        <div style="margin-bottom:0.75rem;">
+          <label for="list-name-input" style="font-weight:600; font-size:0.9rem;">List Name:</label>
+          <input type="text" id="list-name-input" placeholder="e.g. Morning Prayers" style="width:100%; padding:0.4rem 0.6rem; border:1px solid #ccc; border-radius:6px; font-size:0.9rem; margin-top:0.25rem; box-sizing:border-box;">
         </div>
         <div id="selection-list"></div>
       </div>
@@ -399,11 +404,17 @@
        let byTiv = [];
        let selectedTivs = new Set();
        let urlTivs = new Set();
+       let listName = "";
+       const listNameDisplay = document.getElementById("list-name-display");
        try {
          const params = new URLSearchParams(window.location.search);
          const tivParam = params.get("tivs");
+         const nameParam = params.get("name");
          if (tivParam) {
            urlTivs = new Set(tivParam.split(",").map(t => t.trim()));
+         }
+         if (nameParam) {
+           listName = decodeURIComponent(nameParam);
          }
        } catch(e) {}
        try {
@@ -481,16 +492,25 @@
           ? songs.length + " song(s)"
           : filtered.length + " of " + songs.length + " song(s)";
         if (urlTivs.size > 0) {
-          status.innerHTML += ' <span class="filter-badge" id="clear-filter">× Clear filter</span>';
-          const clearBtn = document.getElementById("clear-filter");
-           if (clearBtn) clearBtn.addEventListener("click", () => {
-             urlTivs.clear();
-             const url = new URL(window.location);
-             url.searchParams.delete("tivs");
-             window.history.replaceState({}, "", url);
-             render(currentShown);
-           });
-        }
+           status.innerHTML += ' <span class="filter-badge" id="clear-filter">× Clear filter</span>';
+           const clearBtn = document.getElementById("clear-filter");
+            if (clearBtn) clearBtn.addEventListener("click", () => {
+              urlTivs.clear();
+              listName = "";
+              const url = new URL(window.location);
+              url.searchParams.delete("tivs");
+              url.searchParams.delete("name");
+              window.history.replaceState({}, "", url);
+              listNameDisplay.style.display = "none";
+              render(currentShown);
+            });
+         }
+         if (listName) {
+           listNameDisplay.textContent = listName;
+           listNameDisplay.style.display = "";
+         } else {
+           listNameDisplay.style.display = "none";
+         }
         tbody.textContent = "";
         const frag = document.createDocumentFragment();
         for (const s of filtered) {
@@ -559,11 +579,13 @@
       const selectionList = document.getElementById("selection-list");
       const selectionCount = document.getElementById("selection-count");
       const selectionMeta = document.getElementById("selection-meta");
-       const shareSection = document.getElementById("share-section");
+        const shareSection = document.getElementById("share-section");
       const shareUrl = document.getElementById("share-url");
+      const listNameInput = document.getElementById("list-name-input");
 
       function openSelection() {
         selectedTivs = new Set(urlTivs);
+        listNameInput.value = listName || "";
         renderSelectionList();
         selectionOverlay.classList.remove("hidden");
         document.body.style.overflow = "hidden";
@@ -612,17 +634,25 @@
 
       function generateLink() {
         const tivArray = Array.from(selectedTivs).sort();
+        const nameVal = listNameInput.value.trim();
         const url = new URL(window.location);
         if (tivArray.length > 0) {
           url.searchParams.set("tivs", tivArray.join(","));
         } else {
           url.searchParams.delete("tivs");
         }
-         const link = url.toString();
-         shareUrl.value = link;
-         shareSection.style.display = "";
-         window.history.replaceState({}, "", link);
-       }
+        if (nameVal) {
+          listName = nameVal;
+          url.searchParams.set("name", encodeURIComponent(nameVal));
+        } else {
+          url.searchParams.delete("name");
+          listName = "";
+        }
+        const link = url.toString();
+        shareUrl.value = link;
+        shareSection.style.display = "";
+        window.history.replaceState({}, "", link);
+      }
 
       document.getElementById("open-selection").addEventListener("click", openSelection);
       document.getElementById("selection-close").addEventListener("click", closeSelection);
