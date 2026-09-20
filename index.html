@@ -308,8 +308,14 @@
       cursor: pointer;
       font-size: 0.85rem;
     }
-    .share-link-box button:hover { background: #9a3412; }
-    .filter-badge {
+     .share-link-box button:hover { background: #9a3412; }
+     .share-link-box #go-list {
+       background: #4caf50;
+       border-color: #4caf50;
+       color: #fff;
+     }
+     .share-link-box #go-list:hover { background: #388e3c; }
+     .filter-badge {
       display: inline-block;
       background: #b45309;
       color: #fff;
@@ -332,7 +338,7 @@
   </div>
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
-  <div id="list-name-display" style="display:none; font-size:1.1rem; font-weight:700; color:#b45309; margin-bottom:0.5rem;"></div>
+  <div id="list-name-display" style="display:none; font-size:1.5rem; font-weight:700; color:#b45309; margin-bottom:0.5rem;"></div>
   <table class="songs">
     <thead>
       <tr>
@@ -375,6 +381,7 @@
           <div class="share-link-box">
             <input type="text" id="share-url" readonly>
             <button type="button" id="copy-link">Copy</button>
+             <button type="button" id="go-list">Go to Bhajan List</button>
           </div>
         </div>
       </div>
@@ -669,14 +676,17 @@
         renderSelectionList();
       });
       document.getElementById("selection-generate").addEventListener("click", generateLink);
-      document.getElementById("copy-link").addEventListener("click", () => {
-        shareUrl.select();
-        navigator.clipboard.writeText(shareUrl.value).catch(() => {
-          document.execCommand("copy");
-        });
-      });
+       document.getElementById("copy-link").addEventListener("click", () => {
+         shareUrl.select();
+         navigator.clipboard.writeText(shareUrl.value).catch(() => {
+           document.execCommand("copy");
+         });
+       });
+       document.getElementById("go-list").addEventListener("click", () => {
+         window.location.href = shareUrl.value;
+       });
 
-      overlayClose.addEventListener("click", closeOverlay);
+       overlayClose.addEventListener("click", closeOverlay);
       overlay.addEventListener("click", (e) => {
         if (e.target === overlay) closeOverlay();
       });
