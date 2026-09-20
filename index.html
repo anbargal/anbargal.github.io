@@ -335,6 +335,10 @@
   </div>
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
+  <div id="link-display" style="display:none; margin-bottom:0.75rem; padding:0.5rem 0.75rem; background:#fef3e2; border:1px solid #b45309; border-radius:6px;">
+    <strong>Active bhajan list:</strong>
+    <span id="active-list-info" style="margin-left:0.5rem;"></span>
+  </div>
   <table class="songs">
     <thead>
       <tr>
@@ -402,6 +406,15 @@
        let byTiv = [];
        let selectedTivs = new Set();
        let urlTivs = new Set();
+       try {
+         const params = new URLSearchParams(window.location.search);
+         const tivParam = params.get("tivs");
+         if (tivParam) {
+           urlTivs = new Set(tivParam.split(",").map(t => t.trim()));
+           linkDisplay.style.display = "";
+           activeListInfo.textContent = urlTivs.size + " song(s)";
+         }
+       } catch(e) {}
        try {
         const res = await fetch("data/thiruppugazh.jsonl");
         if (!res.ok) throw new Error("HTTP " + res.status);
@@ -479,13 +492,14 @@
         if (urlTivs.size > 0) {
           status.innerHTML += ' <span class="filter-badge" id="clear-filter">× Clear filter</span>';
           const clearBtn = document.getElementById("clear-filter");
-          if (clearBtn) clearBtn.addEventListener("click", () => {
-            urlTivs.clear();
-            const url = new URL(window.location);
-            url.searchParams.delete("tivs");
-            window.history.replaceState({}, "", url);
-            render(currentShown);
-          });
+           if (clearBtn) clearBtn.addEventListener("click", () => {
+             urlTivs.clear();
+             const url = new URL(window.location);
+             url.searchParams.delete("tivs");
+             window.history.replaceState({}, "", url);
+             linkDisplay.style.display = "none";
+             render(currentShown);
+           });
         }
         tbody.textContent = "";
         const frag = document.createDocumentFragment();
@@ -557,13 +571,7 @@
       const selectionMeta = document.getElementById("selection-meta");
       const shareSection = document.getElementById("share-section");
       const shareUrl = document.getElementById("share-url");
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const tivParam = params.get("tivs");
-        if (tivParam) {
-          urlTivs = new Set(tivParam.split(",").map(t => t.trim()));
-        }
-      } catch(e) {}
+      const linkDisplay = document.getElementById("link-display");
 
       function openSelection() {
         selectedTivs = new Set(urlTivs);
@@ -624,6 +632,9 @@
         const link = url.toString();
         shareUrl.value = link;
         shareSection.style.display = "";
+        linkDisplay.style.display = "";
+        const count = tivArray.length;
+        activeListInfo.textContent = count + " song(s) — " + link;
         window.history.replaceState({}, "", link);
       }
 
