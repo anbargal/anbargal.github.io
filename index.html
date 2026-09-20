@@ -666,11 +666,23 @@
           url.searchParams.delete("name");
           listName = "";
         }
-        const link = url.toString();
-        shareUrl.value = link;
-        shareSection.style.display = "";
-        window.history.replaceState({}, "", link);
-      }
+         const link = url.toString();
+         shareUrl.value = link;
+         shareSection.style.display = "";
+         window.history.replaceState({}, "", link);
+         try {
+           const lists = JSON.parse(localStorage.getItem("bhajan_lists") || "[]");
+           if (nameVal) {
+             const existing = lists.findIndex(l => l.url === link);
+             if (existing >= 0) {
+               lists[existing].count = (lists[existing].count || 1) + 1;
+             } else {
+               lists.push({ name: nameVal, url: link, count: 1, date: Date.now() });
+             }
+             localStorage.setItem("bhajan_lists", JSON.stringify(lists));
+           }
+         } catch(e) {}
+       }
 
       document.getElementById("open-selection").addEventListener("click", openSelection);
       document.getElementById("selection-close").addEventListener("click", closeSelection);
