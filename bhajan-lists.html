@@ -15,19 +15,22 @@
     }
     .header-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
     }
-    h1 { margin-bottom: 0.25rem; }
+    .header-row > div {
+      display: flex;
+      flex-direction: column;
+    }
     .home-link {
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: #b45309;
       border: 1px solid #b45309;
       border-radius: 6px;
-      padding: 0.35rem 0.75rem;
+      padding: 0.2rem 0.6rem;
       white-space: nowrap;
+      margin-bottom: 0.25rem;
     }
     .home-link:hover {
       background: #b45309;
@@ -114,8 +117,10 @@
 </head>
 <body>
   <div class="header-row">
-    <h1>Bhajan Lists</h1>
-    <a href="index.html" class="home-link">Home</a>
+    <div>
+      <a href="index.html" class="home-link">Home</a>
+      <h1>Bhajan Lists</h1>
+    </div>
   </div>
   <div id="lists-container"></div>
   <div class="header-row-bottom">
