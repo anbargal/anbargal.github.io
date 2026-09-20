@@ -399,6 +399,7 @@
       const search = document.getElementById("search");
        let songs = [];
        let currentShown = [];
+       let byTiv = [];
        let selectedTivs = new Set();
        let urlTivs = new Set();
        try {
@@ -406,7 +407,7 @@
         if (!res.ok) throw new Error("HTTP " + res.status);
         const text = await res.text();
         songs = text.trim().split("\n").filter(Boolean).map(JSON.parse);
-        const byTiv = songs.slice().sort((a, b) => a.tiv - b.tiv);
+        byTiv = songs.slice().sort((a, b) => a.tiv - b.tiv);
         search.addEventListener("input", () => render(filterSongs(search.value.trim())));
         render(byTiv);
       } catch (err) {
