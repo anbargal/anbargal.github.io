@@ -263,6 +263,8 @@
       position: sticky;
       bottom: 0;
       background: #fff;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
     .selection-modal-footer .count {
       color: #888;
@@ -279,37 +281,32 @@
       font-size: 0.9rem;
       font-weight: 600;
     }
-    .btn-generate {
-      background: #b45309;
-      color: #fff;
-      border: 1px solid #b45309;
+    .selection-modal-footer .share-section-inner {
+      width: 100%;
+      border-top: 1px solid #eee;
+      padding-top: 0.75rem;
+      margin-top: 0.5rem;
     }
-    .btn-generate:hover { background: #9a3412; }
-    .btn-cancel {
-      background: #f0f0f0;
-      color: #333;
-      border: 1px solid #ccc;
-    }
-    .btn-cancel:hover { background: #e0e0e0; }
     .share-link-box {
       display: flex;
       gap: 0.5rem;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
     }
     .share-link-box input {
       flex: 1;
-      padding: 0.5rem;
+      padding: 0.4rem;
       border: 1px solid #ccc;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
     .share-link-box button {
-      padding: 0.5rem 0.75rem;
+      padding: 0.4rem 0.75rem;
       background: #b45309;
       color: #fff;
       border: 1px solid #b45309;
       border-radius: 6px;
       cursor: pointer;
+      font-size: 0.85rem;
     }
     .share-link-box button:hover { background: #9a3412; }
     .filter-badge {
@@ -335,10 +332,6 @@
   </div>
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
-  <div id="link-display" style="display:none; margin-bottom:0.75rem; padding:0.5rem 0.75rem; background:#fef3e2; border:1px solid #b45309; border-radius:6px;">
-    <strong>Active bhajan list:</strong>
-    <span id="active-list-info" style="margin-left:0.5rem;"></span>
-  </div>
   <table class="songs">
     <thead>
       <tr>
@@ -366,18 +359,18 @@
         </div>
         <div id="selection-list"></div>
       </div>
-      <div class="selection-modal-footer">
+      <div class="selection-modal-footer" id="selection-modal-footer">
         <span class="count" id="selection-count">0 songs selected</span>
         <div class="actions">
           <button class="btn-cancel" id="selection-cancel">Cancel</button>
           <button class="btn-generate" id="selection-generate">Generate Link</button>
         </div>
-      </div>
-      <div class="selection-modal-body" id="share-section" style="display:none;border-top:1px solid #eee;padding-top:1rem;">
-        <strong>Share this link:</strong>
-        <div class="share-link-box">
-          <input type="text" id="share-url" readonly>
-          <button type="button" id="copy-link">Copy</button>
+        <div class="share-section-inner" id="share-section" style="display:none;">
+          <strong>Share:</strong>
+          <div class="share-link-box">
+            <input type="text" id="share-url" readonly>
+            <button type="button" id="copy-link">Copy</button>
+          </div>
         </div>
       </div>
     </div>
@@ -406,14 +399,11 @@
        let byTiv = [];
        let selectedTivs = new Set();
        let urlTivs = new Set();
-       const linkDisplay = document.getElementById("link-display");
        try {
          const params = new URLSearchParams(window.location.search);
          const tivParam = params.get("tivs");
          if (tivParam) {
            urlTivs = new Set(tivParam.split(",").map(t => t.trim()));
-           linkDisplay.style.display = "";
-           activeListInfo.textContent = urlTivs.size + " song(s)";
          }
        } catch(e) {}
        try {
@@ -498,7 +488,6 @@
              const url = new URL(window.location);
              url.searchParams.delete("tivs");
              window.history.replaceState({}, "", url);
-             linkDisplay.style.display = "none";
              render(currentShown);
            });
         }
@@ -629,14 +618,11 @@
         } else {
           url.searchParams.delete("tivs");
         }
-        const link = url.toString();
-        shareUrl.value = link;
-        shareSection.style.display = "";
-        linkDisplay.style.display = "";
-        const count = tivArray.length;
-        activeListInfo.textContent = count + " song(s) — " + link;
-        window.history.replaceState({}, "", link);
-      }
+         const link = url.toString();
+         shareUrl.value = link;
+         shareSection.style.display = "";
+         window.history.replaceState({}, "", link);
+       }
 
       document.getElementById("open-selection").addEventListener("click", openSelection);
       document.getElementById("selection-close").addEventListener("click", closeSelection);
