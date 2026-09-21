@@ -159,25 +159,9 @@
       color: #b45309;
       font-size: 1rem;
     }
-    .modal-body p { margin: 0 0 0.25rem; }
-    .charanam { margin-top: 1.25rem; }
-    .create-list-btn {
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #fff;
-      background: #b45309;
-      border: 1px solid #b45309;
-      border-radius: 6px;
-      padding: 0.35rem 0.75rem;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-    .create-list-btn:hover {
-      background: #9a3412;
-      color: #fff;
-    }
-    .selection-overlay {
+     .modal-body p { margin: 0 0 0.25rem; }
+     .charanam { margin-top: 1.25rem; }
+     .selection-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.5);
@@ -329,13 +313,10 @@
   </style>
 </head>
 <body>
-  <div class="header-row">
-    <h1>Muruga Sharanam</h1>
-    <div style="display:flex;gap:0.5rem;align-items:center;">
-      <a href="bhajan-lists.html" class="bhajan-link">Bhajan Lists</a>
-      <button class="create-list-btn" id="open-selection">+ Create Bhajan List</button>
-    </div>
-  </div>
+   <div class="header-row">
+     <h1>Muruga Sharanam</h1>
+     <a href="bhajan-lists.html" class="bhajan-link">Bhajan Lists</a>
+   </div>
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
   <div id="list-name-display" style="display:none; font-size:1.5rem; font-weight:700; color:#b45309; margin-bottom:0.5rem;"></div>
@@ -599,19 +580,9 @@
       const selectionMeta = document.getElementById("selection-meta");
         const shareSection = document.getElementById("share-section");
       const shareUrl = document.getElementById("share-url");
-      const listNameInput = document.getElementById("list-name-input");
+       const listNameInput = document.getElementById("list-name-input");
 
-       function openSelection() {
-         selectedTivs.clear();
-         listName = "";
-         listNameInput.value = "";
-         shareSection.style.display = "none";
-         renderSelectionList();
-         selectionOverlay.classList.remove("hidden");
-         document.body.style.overflow = "hidden";
-       }
-
-      function closeSelection() {
+       function closeSelection() {
         selectionOverlay.classList.add("hidden");
         document.body.style.overflow = "";
       }
@@ -684,10 +655,9 @@
              localStorage.setItem("bhajan_lists", JSON.stringify(lists));
            }
          } catch(e) {}
-       }
+        }
 
-      document.getElementById("open-selection").addEventListener("click", openSelection);
-      document.getElementById("selection-close").addEventListener("click", closeSelection);
+       document.getElementById("selection-close").addEventListener("click", closeSelection);
       document.getElementById("selection-cancel").addEventListener("click", closeSelection);
       selectionOverlay.addEventListener("click", (e) => {
         if (e.target === selectionOverlay) closeSelection();

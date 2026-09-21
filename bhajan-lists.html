@@ -32,11 +32,29 @@
       white-space: nowrap;
       margin-bottom: 0.25rem;
     }
-    .home-link:hover {
-      background: #b45309;
-      color: #fff;
-    }
-    .empty-state {
+     .home-link:hover {
+       background: #b45309;
+       color: #fff;
+     }
+     .create-list-btn {
+       text-decoration: none;
+       font-size: 0.85rem;
+       font-weight: 600;
+       color: #fff;
+       background: #b45309;
+       border: 1px solid #b45309;
+       border-radius: 6px;
+       padding: 0.35rem 0.75rem;
+       white-space: nowrap;
+       cursor: pointer;
+       align-self: flex-end;
+       margin-bottom: 0.5rem;
+     }
+     .create-list-btn:hover {
+       background: #9a3412;
+       color: #fff;
+     }
+     .empty-state {
       color: #999;
       font-style: italic;
       margin-top: 2rem;
@@ -121,6 +139,7 @@
       <a href="index.html" class="home-link">Home</a>
       <h1>Bhajan Lists</h1>
     </div>
+    <a href="index.html" class="create-list-btn">+ Create Bhajan List</a>
   </div>
   <div id="lists-container"></div>
   <div class="header-row-bottom">
