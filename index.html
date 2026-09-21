@@ -159,25 +159,9 @@
       color: #b45309;
       font-size: 1rem;
     }
-      .modal-body p { margin: 0 0 0.25rem; }
-      .charanam { margin-top: 1.25rem; }
-      .create-list-btn {
-        text-decoration: none;
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: #fff;
-        background: #b45309;
-        border: 1px solid #b45309;
-        border-radius: 6px;
-        padding: 0.35rem 0.75rem;
-        white-space: nowrap;
-        cursor: pointer;
-      }
-      .create-list-btn:hover {
-        background: #9a3412;
-        color: #fff;
-      }
-      .selection-overlay {
+     .modal-body p { margin: 0 0 0.25rem; }
+     .charanam { margin-top: 1.25rem; }
+     .selection-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.5);
@@ -331,9 +315,8 @@
 <body>
    <div class="header-row">
      <h1>Muruga Sharanam</h1>
-      <a href="bhajan-lists.html" class="bhajan-link">Bhajan Lists</a>
-      <button id="open-selection" class="create-list-btn">+ Create Bhajan List</button>
-    </div>
+     <a href="bhajan-lists.html" class="bhajan-link">Bhajan Lists</a>
+   </div>
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
   <div id="list-name-display" style="display:none; font-size:1.5rem; font-weight:700; color:#b45309; margin-bottom:0.5rem;"></div>
@@ -350,12 +333,13 @@
 
   <div class="selection-overlay hidden" id="selection-overlay" role="dialog" aria-modal="true" aria-labelledby="selection-title">
     <div class="selection-modal">
-   <div class="selection-modal-header">
-     <div>
-       <div class="meta" id="selection-meta"></div>
-     </div>
-     <button class="close" id="selection-close" aria-label="Close">×</button>
-   </div>
+      <div class="selection-modal-header">
+        <div>
+          <h2 id="selection-title">Select Songs</h2>
+          <div class="meta" id="selection-meta"></div>
+        </div>
+        <button class="close" id="selection-close" aria-label="Close">×</button>
+      </div>
       <div class="selection-modal-body">
         <h2 id="selection-title">Select Songs</h2>
         <div style="margin-bottom:0.75rem;">
