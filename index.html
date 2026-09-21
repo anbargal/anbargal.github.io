@@ -599,8 +599,6 @@
        const shareSection = document.getElementById("share-section");
        const shareUrl = document.getElementById("share-url");
        const listNameInput = document.getElementById("list-name-input");
-       const selectionSearch = document.getElementById("selection-search");
-       const selectionTitleEl = document.getElementById("selection-title");
 
        function openSelection() {
          selectedTivs.clear();
@@ -617,18 +615,10 @@
         document.body.style.overflow = "";
       }
 
-       function renderSelectionList() {
-         const searchEl = document.getElementById("selection-search");
-         const query = searchEl ? searchEl.value.toLowerCase().trim() : "";
-         selectionList.textContent = "";
-         let checkedCount = 0;
-         const filteredSongs = query ? byTiv.filter(s =>
-           s.title.toLowerCase().includes(query) ||
-           (s.title_en && s.title_en.toLowerCase().includes(query)) ||
-           (s.ragam && s.ragam.toLowerCase().includes(query)) ||
-           String(s.tiv).includes(query)
-         ) : byTiv;
-         for (const s of filteredSongs) {
+      function renderSelectionList() {
+        selectionList.textContent = "";
+        let checkedCount = 0;
+        for (const s of byTiv) {
           const tivStr = String(s.tiv).padStart(3, "0");
           const row = document.createElement("div");
           row.className = "song-check-row";
@@ -709,8 +699,7 @@
         selectedTivs.clear();
         renderSelectionList();
       });
-       document.getElementById("selection-generate").addEventListener("click", generateLink);
-       selectionSearch.addEventListener("input", renderSelectionList);
+      document.getElementById("selection-generate").addEventListener("click", generateLink);
        document.getElementById("copy-link").addEventListener("click", () => {
          shareUrl.select();
          navigator.clipboard.writeText(shareUrl.value).catch(() => {
