@@ -41,6 +41,7 @@
      }
      .create-list-btn {
        text-decoration: none;
+       display: inline-block;
        font-size: 0.85rem;
        font-weight: 600;
        color: #fff;
@@ -137,7 +138,7 @@
 <body>
   <div class="header-row">
     <a href="index.html" class="home-link">Home</a>
-    <button class="create-list-btn" onclick="window.location.href='index.html'">+ Create Bhajan List</button>
+    <a href="index.html?create=true" class="create-list-btn">+ Create Bhajan List</a>
   </div>
   <h1>Bhajan Lists</h1>
   <div id="lists-container"></div>
