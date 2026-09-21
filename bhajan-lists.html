@@ -13,15 +13,19 @@
       padding: 1.5rem;
       line-height: 1.6;
     }
-    .header-row {
-      display: flex;
-      align-items: center;
-    }
-    .header-row > div {
-      display: flex;
-      flex-direction: column;
-    }
-    .home-link {
+     .header-row {
+       display: flex;
+       align-items: center;
+       justify-content: flex-start;
+       gap: 0.5rem;
+     }
+     .header-left {
+       display: flex;
+       align-items: center;
+       gap: 0.5rem;
+     }
+     h1 { margin: 0; }
+     .home-link {
       text-decoration: none;
       font-size: 0.8rem;
       font-weight: 600;
@@ -47,8 +51,6 @@
        padding: 0.35rem 0.75rem;
        white-space: nowrap;
        cursor: pointer;
-       align-self: flex-end;
-       margin-bottom: 0.5rem;
      }
      .create-list-btn:hover {
        background: #9a3412;
@@ -135,11 +137,11 @@
 </head>
 <body>
   <div class="header-row">
-    <div>
+    <div class="header-left">
       <a href="index.html" class="home-link">Home</a>
-      <h1>Bhajan Lists</h1>
+      <button class="create-list-btn" onclick="window.location.href='index.html'">+ Create Bhajan List</button>
     </div>
-    <a href="index.html" class="create-list-btn">+ Create Bhajan List</a>
+    <h1>Bhajan Lists</h1>
   </div>
   <div id="lists-container"></div>
   <div class="header-row-bottom">
