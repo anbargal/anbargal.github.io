@@ -15,16 +15,15 @@
     }
      .header-row {
        display: flex;
-       align-items: center;
-       justify-content: flex-start;
-       gap: 0.5rem;
-     }
-     .header-left {
-       display: flex;
+       justify-content: space-between;
        align-items: center;
        gap: 0.5rem;
+       margin-bottom: 0.5rem;
      }
-     h1 { margin: 0; }
+     h1 {
+       margin: 0;
+       text-align: center;
+     }
      .home-link {
       text-decoration: none;
       font-size: 0.8rem;
@@ -137,12 +136,10 @@
 </head>
 <body>
   <div class="header-row">
-    <div class="header-left">
-      <a href="index.html" class="home-link">Home</a>
-      <button class="create-list-btn" onclick="window.location.href='index.html'">+ Create Bhajan List</button>
-    </div>
-    <h1>Bhajan Lists</h1>
+    <a href="index.html" class="home-link">Home</a>
+    <button class="create-list-btn" onclick="window.location.href='index.html'">+ Create Bhajan List</button>
   </div>
+  <h1>Bhajan Lists</h1>
   <div id="lists-container"></div>
   <div class="header-row-bottom">
     <span id="list-count" style="color:#888; font-size:0.9rem;"></span>
