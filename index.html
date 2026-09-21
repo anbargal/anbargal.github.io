@@ -585,13 +585,17 @@
        const listNameInput = document.getElementById("list-name-input");
 
        function openSelection() {
-         selectedTivs.clear();
-         listName = "";
-         listNameInput.value = "";
-         shareSection.style.display = "none";
-         renderSelectionList();
-         selectionOverlay.classList.remove("hidden");
-         document.body.style.overflow = "hidden";
+         try {
+           selectedTivs.clear();
+           listName = "";
+           if (listNameInput) listNameInput.value = "";
+           if (shareSection) shareSection.style.display = "none";
+           renderSelectionList();
+           if (selectionOverlay) selectionOverlay.classList.remove("hidden");
+           document.body.style.overflow = "hidden";
+         } catch(e) {
+           console.error("openSelection error:", e);
+         }
        }
 
        function closeSelection() {
@@ -704,9 +708,9 @@
            else if (!overlay.classList.contains("hidden")) closeOverlay();
          }
        });
-       if (new URL(window.location.search).searchParams.get("create") === "true") {
-         openSelection();
-       }
+        if (new URL(window.location.search).searchParams.get("create") === "true") {
+          setTimeout(openSelection, 100);
+        }
      })();
   </script>
 </body>
