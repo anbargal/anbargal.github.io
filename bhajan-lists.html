@@ -146,24 +146,13 @@
     <span id="list-count" style="color:#888; font-size:0.9rem;"></span>
     <button class="btn-clear-all" id="clear-all">Clear All</button>
   </div>
+  <script src="common.js"></script>
   <script>
     (function() {
-      function getLists() {
-        try {
-          return JSON.parse(localStorage.getItem("bhajan_lists") || "[]");
-        } catch(e) {
-          return [];
-        }
-      }
-
-      function saveLists(lists) {
-        localStorage.setItem("bhajan_lists", JSON.stringify(lists));
-      }
-
       function renderLists() {
         const container = document.getElementById("lists-container");
         const countEl = document.getElementById("list-count");
-        const lists = getLists();
+        const lists = BhajanLists.get();
         container.textContent = "";
         countEl.textContent = lists.length + " list(s)";
 
@@ -184,9 +173,8 @@
           title.textContent = list.name || "Untitled List";
           title.addEventListener("click", function() {
             // Increment count on visit
-            list.count = (list.count || 1) + 1;
-            saveLists(lists);
-            countEl.textContent = lists.length + " list(s)";
+            BhajanLists.recordVisit(list.url);
+            countEl.textContent = BhajanLists.get().length + " list(s)";
           });
           const meta = document.createElement("div");
           meta.className = "list-card-meta";
@@ -205,7 +193,7 @@
             const idx = lists.indexOf(list);
             if (idx >= 0) {
               lists.splice(idx, 1);
-              saveLists(lists);
+              BhajanLists.save(lists);
               renderLists();
             }
           });
@@ -218,7 +206,7 @@
 
       document.getElementById("clear-all").addEventListener("click", function() {
         if (confirm("Clear all bhajan lists?")) {
-          localStorage.removeItem("bhajan_lists");
+          BhajanLists.clear();
           renderLists();
         }
       });

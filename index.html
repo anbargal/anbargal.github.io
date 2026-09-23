@@ -311,6 +311,8 @@
     }
     .filter-badge:hover { background: #9a3412; }
   </style>
+  <script src="data/thiruppugazh.js"></script>
+  <script src="common.js"></script>
 </head>
 <body>
    <div class="header-row">
@@ -404,26 +406,17 @@
            urlTivs = new Set(tivParam.split(",").map(t => t.trim()));
          }
          if (nameParam) {
-           listName = decodeURIComponent(nameParam);
-           const url = window.location.href;
-           try {
-             const lists = JSON.parse(localStorage.getItem("bhajan_lists") || "[]");
-             const existing = lists.findIndex(l => l.url === url);
-             if (existing >= 0) {
-               lists[existing].count = (lists[existing].count || 1) + 1;
-             } else {
-               lists.push({ name: listName, url, count: 1, date: Date.now() });
-             }
-             localStorage.setItem("bhajan_lists", JSON.stringify(lists));
-           } catch(e) {}
+listName = decodeURIComponent(nameParam);
+            const url = window.location.href;
+            try {
+              BhajanLists.recordVisit(url, listName);
+            } catch(e) {}
          }
        } catch(e) {}
        try {
-        const res = await fetch("data/thiruppugazh.jsonl");
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const text = await res.text();
-        songs = text.trim().split("\n").filter(Boolean).map(JSON.parse);
-        byTiv = songs.slice().sort((a, b) => a.tiv - b.tiv);
+        const data = await Thiruppugazh.load();
+        songs = data.songs;
+        byTiv = data.byTiv;
         search.addEventListener("input", () => render(filterSongs(search.value.trim())));
         render(byTiv);
       } catch (err) {
@@ -708,16 +701,7 @@
          shareSection.style.display = "";
          window.history.replaceState({}, "", link);
          try {
-           const lists = JSON.parse(localStorage.getItem("bhajan_lists") || "[]");
-           if (nameVal) {
-             const existing = lists.findIndex(l => l.url === link);
-             if (existing >= 0) {
-               lists[existing].count = (lists[existing].count || 1) + 1;
-             } else {
-               lists.push({ name: nameVal, url: link, count: 1, date: Date.now() });
-             }
-             localStorage.setItem("bhajan_lists", JSON.stringify(lists));
-           }
+           if (nameVal) BhajanLists.recordVisit(link, nameVal);
          } catch(e) {}
         }
 
