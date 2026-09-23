@@ -161,144 +161,6 @@
     }
      .modal-body p { margin: 0 0 0.25rem; }
      .charanam { margin-top: 1.25rem; }
-     .selection-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      z-index: 200;
-    }
-    .selection-overlay.hidden { display: none; }
-    .selection-modal {
-      background: #fff;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 42rem;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-    .selection-modal-header {
-      position: sticky;
-      top: 0;
-      background: #fff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      border-bottom: 1px solid #eee;
-      padding: 1rem 1.5rem;
-    }
-    .selection-modal-header h2 { margin: 0; font-size: 1.2rem; }
-    .selection-modal-body { padding: 1rem 1.5rem 2rem; }
-    .select-all-row {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .select-all-row button {
-      padding: 0.4rem 0.75rem;
-      border: 1px solid #b45309;
-      border-radius: 6px;
-      background: #fff;
-      color: #b45309;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-    .select-all-row button:hover {
-      background: #b45309;
-      color: #fff;
-    }
-    .song-check-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 0;
-      border-bottom: 1px solid #f5f5f5;
-    }
-    .song-check-row input[type="checkbox"] {
-      width: 1.1rem;
-      height: 1.1rem;
-      cursor: pointer;
-    }
-    .song-check-row .check-tiv {
-      font-weight: 600;
-      color: #b45309;
-      min-width: 3rem;
-      font-size: 0.9rem;
-    }
-    .song-check-row .check-title {
-      flex: 1;
-      overflow-wrap: anywhere;
-    }
-    .song-check-row .check-title-en {
-      color: #666;
-      font-size: 0.85rem;
-    }
-    .selection-modal-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid #eee;
-      padding: 1rem 1.5rem;
-      position: sticky;
-      bottom: 0;
-      background: #fff;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-    .selection-modal-footer .count {
-      color: #888;
-      font-size: 0.9rem;
-    }
-    .selection-modal-footer .actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-    .selection-modal-footer .actions button {
-      padding: 0.4rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-    .selection-modal-footer .share-section-inner {
-      width: 100%;
-      border-top: 1px solid #eee;
-      padding-top: 0.75rem;
-      margin-top: 0.5rem;
-    }
-    .share-link-box {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-    .share-link-box input {
-      flex: 1;
-      padding: 0.4rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 0.8rem;
-    }
-    .share-link-box button {
-      padding: 0.4rem 0.75rem;
-      background: #b45309;
-      color: #fff;
-      border: 1px solid #b45309;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-     .share-link-box button:hover { background: #9a3412; }
-     .share-link-box #go-list {
-       background: #4caf50;
-       border-color: #4caf50;
-       color: #fff;
-     }
-     .share-link-box #go-list:hover { background: #388e3c; }
      .filter-badge {
       display: inline-block;
       background: #b45309;
@@ -333,46 +195,6 @@
     <tbody id="songs"></tbody>
   </table>
 
-  <div class="selection-overlay hidden" id="selection-overlay" role="dialog" aria-modal="true" aria-labelledby="selection-title">
-    <div class="selection-modal">
-      <div class="selection-modal-header">
-        <div>
-          <h2 id="selection-title">Select Songs</h2>
-          <div class="meta" id="selection-meta"></div>
-        </div>
-        <button class="close" id="selection-close" aria-label="Close">×</button>
-      </div>
-      <div class="selection-modal-body">
-        <h2 id="selection-title">Select Songs</h2>
-        <div style="margin-bottom:0.75rem;">
-          <label for="list-name-input" style="font-weight:600; font-size:0.9rem;">List Name:</label>
-          <input type="text" id="list-name-input" placeholder="e.g. Morning Prayers" style="width:100%; padding:0.4rem 0.6rem; border:1px solid #ccc; border-radius:6px; font-size:0.9rem; margin-top:0.25rem; box-sizing:border-box;">
-        </div>
-        <input type="search" id="selection-search" placeholder="Search songs…" aria-label="Search songs" style="width:100%; padding:0.4rem 0.6rem; border:1px solid #ccc; border-radius:6px; font-size:0.9rem; margin-bottom:0.5rem; box-sizing:border-box;">
-        <div class="select-all-row">
-          <button type="button" id="select-all">Select All</button>
-          <button type="button" id="deselect-all">Deselect All</button>
-        </div>
-        <div id="selection-list"></div>
-      </div>
-      <div class="selection-modal-footer" id="selection-modal-footer">
-        <span class="count" id="selection-count">0 songs selected</span>
-        <div class="actions">
-          <button class="btn-cancel" id="selection-cancel">Cancel</button>
-          <button class="btn-generate" id="selection-generate">Generate Link</button>
-        </div>
-        <div class="share-section-inner" id="share-section" style="display:none;">
-          <strong>Share:</strong>
-          <div class="share-link-box">
-            <input type="text" id="share-url" readonly>
-            <button type="button" id="copy-link">Copy</button>
-             <button type="button" id="go-list">Go to Bhajan List</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="overlay hidden" id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
     <div class="modal">
       <div class="modal-header">
@@ -391,10 +213,9 @@
       const status = document.getElementById("status");
       const tbody = document.getElementById("songs");
       const search = document.getElementById("search");
-       let songs = [];
+let songs = [];
        let currentShown = [];
        let byTiv = [];
-       let selectedTivs = new Set();
        let urlTivs = new Set();
        let listName = "";
        const listNameDisplay = document.getElementById("list-name-display");
@@ -406,11 +227,10 @@
            urlTivs = new Set(tivParam.split(",").map(t => t.trim()));
          }
          if (nameParam) {
-listName = decodeURIComponent(nameParam);
-            const url = window.location.href;
-            try {
-              BhajanLists.recordVisit(url, listName);
-            } catch(e) {}
+           listName = nameParam;
+           try {
+             BhajanLists.recordVisit(BhajanLists.catalogUrl(), listName);
+           } catch(e) {}
          }
        } catch(e) {}
        try {
@@ -569,13 +389,6 @@ listName = decodeURIComponent(nameParam);
       const overlayMeta = document.getElementById("overlay-meta");
       const overlayLyrics = document.getElementById("overlay-lyrics");
       const overlayClose = document.getElementById("overlay-close");
-      const selectionOverlay = document.getElementById("selection-overlay");
-       const selectionList = document.getElementById("selection-list");
-       const selectionCount = document.getElementById("selection-count");
-       const selectionMeta = document.getElementById("selection-meta");
-       const shareSection = document.getElementById("share-section");
-       const shareUrl = document.getElementById("share-url");
-       const listNameInput = document.getElementById("list-name-input");
 
       function openOverlay(s) {
         overlayTitle.textContent = s.title;
@@ -624,126 +437,13 @@ listName = decodeURIComponent(nameParam);
         document.body.style.overflow = "";
       }
 
-       function openSelection() {
-         try {
-           selectedTivs.clear();
-           listName = "";
-           if (listNameInput) listNameInput.value = "";
-           if (shareSection) shareSection.style.display = "none";
-           renderSelectionList();
-           if (selectionOverlay) selectionOverlay.classList.remove("hidden");
-           document.body.style.overflow = "hidden";
-         } catch(e) {
-           console.error("openSelection error:", e);
-         }
-       }
-
-       function closeSelection() {
-        selectionOverlay.classList.add("hidden");
-        document.body.style.overflow = "";
-      }
-
-      function renderSelectionList() {
-        selectionList.textContent = "";
-        let checkedCount = 0;
-        for (const s of byTiv) {
-          const tivStr = String(s.tiv).padStart(3, "0");
-          const row = document.createElement("div");
-          row.className = "song-check-row";
-          const cb = document.createElement("input");
-          cb.type = "checkbox";
-          cb.checked = selectedTivs.has(tivStr);
-          cb.addEventListener("change", () => {
-            if (cb.checked) selectedTivs.add(tivStr);
-            else selectedTivs.delete(tivStr);
-            updateCount();
-          });
-          const tivSpan = document.createElement("span");
-          tivSpan.className = "check-tiv";
-          tivSpan.textContent = tivStr;
-          const titleSpan = document.createElement("span");
-          titleSpan.className = "check-title";
-          titleSpan.textContent = s.title;
-          const titleEnSpan = document.createElement("span");
-          titleEnSpan.className = "check-title-en";
-          titleEnSpan.textContent = " — " + s.title_en;
-          titleSpan.appendChild(titleEnSpan);
-          row.append(cb, tivSpan, titleSpan);
-          selectionList.appendChild(row);
-          if (cb.checked) checkedCount++;
-        }
-        selectionMeta.textContent = checkedCount + " of " + songs.length + " song(s) selected";
-      }
-
-      function updateCount() {
-        selectionCount.textContent = selectedTivs.size + " song(s) selected";
-      }
-
-      function generateLink() {
-        const tivArray = Array.from(selectedTivs).sort();
-        const nameVal = listNameInput.value.trim();
-        const url = new URL(window.location);
-        url.searchParams.delete("create");
-        if (tivArray.length > 0) {
-          url.searchParams.set("tivs", tivArray.join(","));
-        } else {
-          url.searchParams.delete("tivs");
-        }
-        if (nameVal) {
-          listName = nameVal;
-          url.searchParams.set("name", encodeURIComponent(nameVal));
-        } else {
-          url.searchParams.delete("name");
-          listName = "";
-        }
-         const link = url.toString();
-         shareUrl.value = link;
-         shareSection.style.display = "";
-         window.history.replaceState({}, "", link);
-         try {
-           if (nameVal) BhajanLists.recordVisit(link, nameVal);
-         } catch(e) {}
-        }
-
-       document.getElementById("selection-close").addEventListener("click", closeSelection);
-       document.getElementById("selection-cancel").addEventListener("click", closeSelection);
-       selectionOverlay.addEventListener("click", (e) => {
-         if (e.target === selectionOverlay) closeSelection();
-       });
-        const openSelectionBtn = document.getElementById("open-selection");
-        if (openSelectionBtn) openSelectionBtn.addEventListener("click", openSelection);
-       document.getElementById("select-all").addEventListener("click", () => {
-        for (const s of byTiv) selectedTivs.add(String(s.tiv).padStart(3, "0"));
-        renderSelectionList();
-      });
-      document.getElementById("deselect-all").addEventListener("click", () => {
-        selectedTivs.clear();
-        renderSelectionList();
-      });
-      document.getElementById("selection-generate").addEventListener("click", generateLink);
-       document.getElementById("copy-link").addEventListener("click", () => {
-         shareUrl.select();
-         navigator.clipboard.writeText(shareUrl.value).catch(() => {
-           document.execCommand("copy");
-         });
-       });
-       document.getElementById("go-list").addEventListener("click", () => {
-         window.location.href = shareUrl.value;
-       });
-
        overlayClose.addEventListener("click", closeOverlay);
       overlay.addEventListener("click", (e) => {
         if (e.target === overlay) closeOverlay();
       });
        document.addEventListener("keydown", (e) => {
-         if (e.key === "Escape") {
-           if (!selectionOverlay.classList.contains("hidden")) closeSelection();
-           else if (!overlay.classList.contains("hidden")) closeOverlay();
-         }
+         if (e.key === "Escape" && !overlay.classList.contains("hidden")) closeOverlay();
        });
-        if (new URLSearchParams(window.location.search).get("create") === "true") {
-          setTimeout(openSelection, 100);
-        }
      })();
   </script>
 </body>
