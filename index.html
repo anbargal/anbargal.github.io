@@ -690,6 +690,7 @@
         const tivArray = Array.from(selectedTivs).sort();
         const nameVal = listNameInput.value.trim();
         const url = new URL(window.location);
+        url.searchParams.delete("create");
         if (tivArray.length > 0) {
           url.searchParams.set("tivs", tivArray.join(","));
         } else {
@@ -756,7 +757,7 @@
            else if (!overlay.classList.contains("hidden")) closeOverlay();
          }
        });
-        if (new URL(window.location.search).searchParams.get("create") === "true") {
+        if (new URLSearchParams(window.location.search).get("create") === "true") {
           setTimeout(openSelection, 100);
         }
      })();
