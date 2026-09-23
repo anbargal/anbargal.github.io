@@ -358,7 +358,7 @@
           <div class="share-link-box">
             <input type="text" id="share-url" readonly>
             <button type="button" id="copy-link">Copy</button>
-            <button type="button" id="go-list">Go to Bhajan List</button>
+            <button type="button" id="go-list">Save Bhajan List</button>
           </div>
         </div>
       </div>
@@ -459,7 +459,6 @@
 
       function renderSelectionList() {
         selectionList.textContent = "";
-        let checkedCount = 0;
         for (const s of byTiv) {
           const tivStr = String(s.tiv).padStart(3, "0");
           const row = document.createElement("div");
@@ -471,6 +470,8 @@
             if (cb.checked) selectedTivs.add(tivStr);
             else selectedTivs.delete(tivStr);
             updateCount();
+            updateMeta();
+            refreshShare();
           });
           const tivSpan = document.createElement("span");
           tivSpan.className = "check-tiv";
@@ -484,26 +485,46 @@
           titleSpan.appendChild(titleEnSpan);
           row.append(cb, tivSpan, titleSpan);
           selectionList.appendChild(row);
-          if (cb.checked) checkedCount++;
         }
-        selectionMeta.textContent = checkedCount + " of " + songs.length + " song(s) selected";
+        updateMeta();
       }
 
       function updateCount() {
         selectionCount.textContent = selectedTivs.size + " song(s) selected";
       }
 
-      function generateLink() {
+      function updateMeta() {
+        let checkedCount = 0;
+        for (const s of byTiv) {
+          if (selectedTivs.has(String(s.tiv).padStart(3, "0"))) checkedCount++;
+        }
+        selectionMeta.textContent = checkedCount + " of " + songs.length + " song(s) selected";
+      }
+
+      function buildLink() {
         const tivArray = Array.from(selectedTivs).sort();
         const nameVal = listNameInput.value.trim();
         const params = new URLSearchParams();
         if (tivArray.length > 0) params.set("tivs", tivArray.join(","));
         if (nameVal) params.set("name", nameVal);
-        const link = BhajanLists.catalogUrl(params.toString());
+        return BhajanLists.catalogUrl(params.toString());
+      }
+
+      function refreshShare() {
+        if (shareSection.style.display === "none") return;
+        const link = buildLink();
+        shareUrl.value = link;
+        window.history.replaceState({}, "", link);
+        if (!link.includes("?")) shareSection.style.display = "none";
+      }
+
+      function generateLink() {
+        const link = buildLink();
         shareUrl.value = link;
         shareSection.style.display = "";
         window.history.replaceState({}, "", link);
         try {
+          const nameVal = listNameInput.value.trim();
           if (nameVal) BhajanLists.recordVisit(link, nameVal);
         } catch(e) {}
       }
@@ -518,12 +539,15 @@
         for (const s of byTiv) selectedTivs.add(String(s.tiv).padStart(3, "0"));
         renderSelectionList();
         updateCount();
+        refreshShare();
       });
       document.getElementById("deselect-all").addEventListener("click", () => {
         selectedTivs.clear();
         renderSelectionList();
         updateCount();
+        refreshShare();
       });
+      listNameInput.addEventListener("input", refreshShare);
       document.getElementById("selection-generate").addEventListener("click", generateLink);
       document.getElementById("copy-link").addEventListener("click", () => {
         shareUrl.select();
