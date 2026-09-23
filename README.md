@@ -5,7 +5,7 @@ A dependency-free static site for browsing the Thiruppugazh song catalog and cre
 ## Pages
 
 - **`index.html`** — the song catalog. Live search across titles/ragam/thalam/lyrics/YouTube links, a song detail overlay with lyrics, and URL deep-link filtering (`?tivs=…&name=…`).
-- **`bhajan-lists.html`** — saved bhajan lists. Render list cards with visit counts, remove individual lists, or clear all. "+ Create Bhajan List" opens a selection modal in place (no navigation) and generates a root-relative share link (`/?tivs=…&name=…`).
+- **`bhajan-lists.html`** — saved bhajan lists. Render list cards with visit counts, remove individual lists, or clear all. "+ Create Bhajan List" opens a selection modal in place (no navigation) and generates a full shareable link (`origin/?tivs=…&name=…`).
 
 ## Run the dev server
 
@@ -35,5 +35,5 @@ GitHub Pages (this repo) serves the `main` branch directly; push to deploy. Shar
 ## Making changes
 
 - Shared logic belongs in `common.js` or `data/thiruppugazh.js`, not duplicated per page.
-- Keep generated share URLs root-relative (`/?…`) — no `index.html`, no `create=true`.
+- Keep generated share URLs absolute (`origin/?…`) — no `index.html`, no `create=true`.
 - After changes, run the full agent-browser test suite described in `AGENTS.md` and keep docs (`AGENTS.md`, `README.md`, `data/README.md`) in sync.

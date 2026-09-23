@@ -10,7 +10,7 @@ Static site with no build step, framework, or package.json. Two pages, all clien
 Shared JS loaded via `<script>` tags (classic scripts, globals only, no modules):
 
 - `data/thiruppugazh.js` — `Thiruppugazh.load()` fetches + parses `data/thiruppugazh.jsonl`, returns `{ songs, byTiv }`.
-- `common.js` — `BhajanLists` namespace wrapping `localStorage["bhajan_lists"]`: `get()`, `save(lists)`, `clear()`, `catalogUrl(search)`, `recordVisit(url, name)`. `catalogUrl()` builds the canonical root-relative list link (`/?…`).
+- `common.js` — `BhajanLists` namespace wrapping `localStorage["bhajan_lists"]`: `get()`, `save(lists)`, `clear()`, `catalogUrl(search)`, `recordVisit(url, name)`. `catalogUrl()` builds the canonical absolute list URL (`origin/?…`, no `index.html`).
 
 There is no lint/typecheck/test script. The only way to verify changes is in the browser (below).
 
@@ -53,8 +53,8 @@ Notes:
 
 6. **Open modal**: on bhajan-lists.html click `#open-selection` (+ Create Bhajan List) → `#selection-overlay` loses `hidden`, `#selection-list` has 448 rows, URL unchanged (no navigation).
 7. **Selection + count**: click first two `.song-check-row input` → `#selection-count` shows `2 song(s) selected`; `#select-all` → `#selection-count` shows `446` (unique TIVs; the data contains duplicate TIV rows, e.g. 398 and 399) while `#selection-meta` shows `448 of 448 song(s) selected`; `#deselect-all` → `0 song(s) selected`.
-8. **Generate Link**: select 2 songs, set `#list-name-input` = "Test List", click `#selection-generate` → `#share-url` is `/?tivs=…&name=…` **root-relative with no `index.html` and no `create=true`**; `localStorage.bhajan_lists` contains one entry `{name:"Test List", count:1}`.
-9. **Go to list**: click `#go-list` → lands on the generated `/` URL, status `2 of 448 song(s)`, `#list-name-display` = "Test List", and the stored entry count incremented.
+8. **Generate Link**: select 2 songs, set `#list-name-input` = "Test List", click `#selection-generate` → `#share-url` is the full **absolute** URL (e.g. `http://localhost:8000/?tivs=…&name=…`) with no `index.html` and no `create=true`; `localStorage.bhajan_lists` contains one entry `{name:"Test List", count:1}` with the same absolute `url`.
+9. **Go to list**: click `#go-list` → lands on the generated `/?…` URL, status `2 of 448 song(s)`, `#list-name-display` = "Test List", and the stored entry count incremented.
 10. **Copy**: click `#copy-link` → clipboard value equals `#share-url` value.
 11. **Cancel/close**: `#selection-cancel` (or `Escape`) hides the overlay and restores scroll.
 
@@ -69,13 +69,13 @@ Notes:
 
 #### shared JS
 
-18. **recordVisit create-branch**: open a deep link whose root-relative URL is NOT yet stored (`/?tivs=…&name=NewName`) → storage gains a `{name:"NewName", count:1}` entry.
+18. **recordVisit create-branch**: open a deep link whose absolute `catalogUrl()` (e.g. `/?tivs=…&name=NewName`) is NOT yet stored → storage gains a `{name:"NewName", count:1}` entry with that absolute `url`.
 19. **No leakage**: after every case, `agent-browser console` must be empty, and clean up with `localStorage.removeItem('bhajan_lists')`.
 
 ## Conventions
 
 - Inline page scripts are IIFEs that reference the shared globals (`Thiruppugazh`, `BhajanLists`) — keep shared logic in `common.js` / `data/thiruppugazh.js`, not duplicated per page.
-- URL generation (`generateLink`, in `bhajan-lists.html`) must emit a root-relative link (`/?…` via `BhajanLists.catalogUrl`) — never reference `index.html` or emit a `create=true` param.
+- URL generation (`generateLink`, in `bhajan-lists.html`) must emit an absolute, shareable link (`origin/?…` via `BhajanLists.catalogUrl`) — never reference `index.html` or emit a `create=true` param.
 - Do not add a build step; the site is plain static HTML+JS.
 - **Run the full test suite** (all cases in this file) with agent-browser after any JS/HTML change; also check `agent-browser console` stays empty.
 - **Keep docs in sync**: update `README.md` (overview/layout), `data/README.md` (schema), and this file (tests/conventions) when a change affects them.

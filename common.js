@@ -18,11 +18,12 @@ const BhajanLists = (() => {
     localStorage.removeItem(STORAGE_KEY);
   }
 
-  // Canonical catalog-page URL, root-relative. With no argument it derives the
-  // query from the current page (index load); pass a query string to build one.
+  // Canonical catalog-page URL, absolute (origin + root path, no index.html).
+  // With no argument it derives the query from the current page (index load);
+  // pass a query string to build one.
   function catalogUrl(search) {
     const q = search === undefined ? window.location.search.replace(/^\?/, "") : search;
-    return q ? "/?" + q : "/";
+    return window.location.origin + "/" + (q ? "?" + q : "");
   }
 
   function recordVisit(url, name) {
