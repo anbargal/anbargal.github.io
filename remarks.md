@@ -8,6 +8,10 @@
 
 - [ ] Check TIV 347 — blogspot lists this song as "எழுதரிய" (5 charanams, no santham) but kaumaram 1278 is "விழையும் மனிதரை" (santham + 8 charanams). Recorded the full kaumaram 1278 text under title "விழையும் மனிதரை"; confirm whether the "எழுதரிய" subset should be stored instead.
 
+### TIV 204 — IravAmal
+
+- [ ] Kaumaram index 943 — is the title "iravAmal" or "iravAmar"? Check lyrics with book.
+
 ### TIV 160 — Bumi Adhanil
 
 - [ ] Spelling and lyrics need verification.
