@@ -4,8 +4,8 @@ A dependency-free static site for browsing the Thiruppugazh song catalog and cre
 
 ## Pages
 
-- **`index.html`** — the song catalog. Live search across titles/ragam/thalam/lyrics/YouTube links, a song detail overlay with lyrics, and URL deep-link filtering (`?tivs=…&name=…`).
-- **`bhajan-lists.html`** — saved bhajan lists. Render list cards with visit counts, remove individual lists, or clear all. "+ Create Bhajan List" opens a selection modal in place (no navigation) and generates a full shareable link (`origin/?tivs=…&name=…`).
+- **`index.html`** — the song catalog. Live search across titles/ragam/thalam/lyrics/YouTube links, a song detail overlay with lyrics, and URL deep-link filtering (`?tivs=…&name=…`, with optional `notes=…&kafrom=…&kato=…` displayed above the table).
+- **`bhajan-lists.html`** — saved bhajan lists. Render list cards with visit counts, remove individual lists, or clear all. "+ Create Bhajan List" opens a selection modal in place (no navigation) — list name, song selection, optional additional notes, and an optional கந்தர் அநுபூதி range — and generates a full shareable link (`origin/?tivs=…&name=…`).
 
 ## Run the dev server
 

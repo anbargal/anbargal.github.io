@@ -249,13 +249,66 @@
     .selection-modal-footer {
       flex-shrink: 0;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      align-items: stretch;
       border-top: 1px solid #eee;
       padding: 1rem 1.5rem;
       background: #fff;
+      gap: 0.5rem;
+    }
+    .footer-main-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       flex-wrap: wrap;
       gap: 0.5rem;
+    }
+    .list-extra-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .list-extra-fields .extra-field label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+    .list-extra-fields textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.4rem 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      resize: vertical;
+    }
+    .ka-range-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .ka-range-row label { cursor: pointer; }
+    .ka-range-row input[type="checkbox"] {
+      width: 1.1rem;
+      height: 1.1rem;
+      cursor: pointer;
+    }
+    .ka-range-row input[type="number"] {
+      width: 4.5rem;
+      padding: 0.3rem 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    .ka-range-row input[type="number"]:disabled {
+      background: #f5f5f5;
+      color: #999;
+      cursor: not-allowed;
     }
     .selection-modal-footer-actions {
       display: flex;
@@ -345,12 +398,27 @@
         <div id="selection-list"></div>
       </div>
       <div class="selection-modal-footer" id="selection-modal-footer">
-        <span class="meta" id="selection-meta"></span>
-        <div class="selection-modal-footer-actions">
-          <span class="count" id="selection-count">0 songs selected</span>
-          <div class="actions">
-            <button class="btn-cancel" id="selection-cancel">Cancel</button>
-            <button class="btn-generate" id="selection-generate">Generate Link</button>
+        <div class="list-extra-fields">
+          <div class="extra-field">
+            <label for="notes-input">Additional notes</label>
+            <textarea id="notes-input" rows="2" placeholder="Optional notes for this list…"></textarea>
+          </div>
+          <div class="ka-range-row">
+            <input type="checkbox" id="ka-range-check">
+            <label for="ka-range-check" lang="ta">கந்தர் அநுபூதி:</label>
+            <input type="number" id="ka-from" min="1" placeholder="from" disabled aria-label="கந்தர் அநுபூதி start">
+            <span>to</span>
+            <input type="number" id="ka-to" min="1" placeholder="to" disabled aria-label="கந்தர் அநுபூதி end">
+          </div>
+        </div>
+        <div class="footer-main-row">
+          <span class="meta" id="selection-meta"></span>
+          <div class="selection-modal-footer-actions">
+            <span class="count" id="selection-count">0 songs selected</span>
+            <div class="actions">
+              <button class="btn-cancel" id="selection-cancel">Cancel</button>
+              <button class="btn-generate" id="selection-generate">Generate Link</button>
+            </div>
           </div>
         </div>
         <div class="share-section-inner" id="share-section" style="display:none;">
@@ -439,6 +507,10 @@
       const shareSection = document.getElementById("share-section");
       const shareUrl = document.getElementById("share-url");
       const listNameInput = document.getElementById("list-name-input");
+      const notesInput = document.getElementById("notes-input");
+      const kaRangeCheck = document.getElementById("ka-range-check");
+      const kaFrom = document.getElementById("ka-from");
+      const kaTo = document.getElementById("ka-to");
       let songs = [];
       let byTiv = [];
       let selectedTivs = new Set();
@@ -446,6 +518,12 @@
       function openSelection() {
         selectedTivs.clear();
         listNameInput.value = "";
+        notesInput.value = "";
+        kaRangeCheck.checked = false;
+        kaFrom.value = "";
+        kaTo.value = "";
+        kaFrom.disabled = true;
+        kaTo.disabled = true;
         shareSection.style.display = "none";
         renderSelectionList();
         selectionOverlay.classList.remove("hidden");
@@ -507,6 +585,14 @@
         const params = new URLSearchParams();
         if (tivArray.length > 0) params.set("tivs", tivArray.join(","));
         if (nameVal) params.set("name", nameVal);
+        const notesVal = notesInput.value.trim();
+        if (notesVal) params.set("notes", notesVal);
+        if (kaRangeCheck.checked) {
+          const fromVal = kaFrom.value.trim();
+          const toVal = kaTo.value.trim();
+          if (fromVal) params.set("kafrom", fromVal);
+          if (toVal) params.set("kato", toVal);
+        }
         return BhajanLists.catalogUrl(params.toString());
       }
 
@@ -548,6 +634,14 @@
         refreshShare();
       });
       listNameInput.addEventListener("input", refreshShare);
+      notesInput.addEventListener("input", refreshShare);
+      kaRangeCheck.addEventListener("change", () => {
+        kaFrom.disabled = !kaRangeCheck.checked;
+        kaTo.disabled = !kaRangeCheck.checked;
+        refreshShare();
+      });
+      kaFrom.addEventListener("input", refreshShare);
+      kaTo.addEventListener("input", refreshShare);
       document.getElementById("selection-generate").addEventListener("click", generateLink);
       document.getElementById("copy-link").addEventListener("click", () => {
         shareUrl.select();

@@ -34,6 +34,31 @@
       color: #fff;
     }
     #status { color: #777; }
+    #list-extra-display {
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      background: #fafafa;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .extra-ka {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 0.5rem;
+    }
+    .extra-notes-heading {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 0.15rem;
+    }
+    .extra-notes-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+      white-space: pre-wrap;
+    }
     #search {
       width: 100%;
       box-sizing: border-box;
@@ -184,6 +209,7 @@
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
   <div id="list-name-display" style="display:none; font-size:1.5rem; font-weight:700; color:#b45309; margin-bottom:0.5rem;"></div>
+  <div id="list-extra-display" style="display:none;"></div>
   <table class="songs">
     <thead>
       <tr>
@@ -218,7 +244,11 @@ let songs = [];
        let byTiv = [];
        let urlTivs = new Set();
        let listName = "";
+       let listNotes = "";
+       let kaFromVal = "";
+       let kaToVal = "";
        const listNameDisplay = document.getElementById("list-name-display");
+       const listExtraDisplay = document.getElementById("list-extra-display");
        try {
          const params = new URLSearchParams(window.location.search);
          const tivParam = params.get("tivs");
@@ -232,6 +262,9 @@ let songs = [];
              BhajanLists.recordVisit(BhajanLists.catalogUrl(), listName);
            } catch(e) {}
          }
+         listNotes = params.get("notes") || "";
+         kaFromVal = params.get("kafrom") || "";
+         kaToVal = params.get("kato") || "";
        } catch(e) {}
        try {
         const data = await Thiruppugazh.load();
@@ -311,11 +344,18 @@ let songs = [];
             if (clearBtn) clearBtn.addEventListener("click", () => {
               urlTivs.clear();
               listName = "";
+              listNotes = "";
+              kaFromVal = "";
+              kaToVal = "";
               const url = new URL(window.location);
               url.searchParams.delete("tivs");
               url.searchParams.delete("name");
+              url.searchParams.delete("notes");
+              url.searchParams.delete("kafrom");
+              url.searchParams.delete("kato");
               window.history.replaceState({}, "", url);
               listNameDisplay.style.display = "none";
+              listExtraDisplay.style.display = "none";
               render(currentShown);
             });
          }
@@ -325,6 +365,23 @@ let songs = [];
          } else {
            listNameDisplay.style.display = "none";
          }
+         listExtraDisplay.textContent = "";
+         if (kaFromVal || kaToVal) {
+           const kaEl = document.createElement("div");
+           kaEl.className = "extra-ka";
+           kaEl.textContent = "கந்தர் அநுபூதி: " + (kaFromVal || "?") + " to " + (kaToVal || "?");
+           listExtraDisplay.appendChild(kaEl);
+         }
+         if (listNotes) {
+           const notesHeading = document.createElement("div");
+           notesHeading.className = "extra-notes-heading";
+           notesHeading.textContent = "Additional Notes:";
+           const notesEl = document.createElement("div");
+           notesEl.className = "extra-notes-text";
+           notesEl.textContent = listNotes;
+           listExtraDisplay.append(notesHeading, notesEl);
+         }
+         listExtraDisplay.style.display = listExtraDisplay.childNodes.length ? "" : "none";
         tbody.textContent = "";
         const frag = document.createDocumentFragment();
         for (const s of filtered) {
