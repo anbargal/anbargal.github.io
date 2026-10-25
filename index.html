@@ -35,10 +35,12 @@
     }
     #status { color: #777; }
     #list-extra-display {
-      border: 1px solid #e5e5e5;
+      border: 2px solid #b45309;
       border-radius: 8px;
-      background: #fafafa;
+      background: #fff7ed;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       padding: 0.75rem;
+      margin-top: 1.25rem;
       margin-bottom: 0.5rem;
     }
     .extra-ka {
@@ -199,6 +201,7 @@
     .filter-badge:hover { background: #9a3412; }
   </style>
   <script src="data/thiruppugazh.js"></script>
+  <script src="data/guruji_raghavan.js"></script>
   <script src="common.js"></script>
 </head>
 <body>
@@ -209,7 +212,6 @@
   <input type="search" id="search" placeholder="தேடுக / Search…" aria-label="Search songs" autocomplete="off">
   <p id="status">Loading songs…</p>
   <div id="list-name-display" style="display:none; font-size:1.5rem; font-weight:700; color:#b45309; margin-bottom:0.5rem;"></div>
-  <div id="list-extra-display" style="display:none;"></div>
   <table class="songs">
     <thead>
       <tr>
@@ -220,6 +222,7 @@
     </thead>
     <tbody id="songs"></tbody>
   </table>
+  <div id="list-extra-display" style="display:none;"></div>
 
   <div class="overlay hidden" id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
     <div class="modal">
@@ -422,6 +425,7 @@ let songs = [];
 
           const ytCell = document.createElement("td");
           ytCell.className = "yt-cell";
+          // Red icon (original)
           if (s.youtube && s.youtube.length) {
             const a = document.createElement("a");
             a.className = "yt-link";
@@ -434,6 +438,26 @@ let songs = [];
               + '<path fill="#FF0000" d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>';
             ytCell.appendChild(a);
           }
+          // Blue icon for Guruji Raghavan rendition
+          try {
+            const tivKey = String(s.tiv).padStart(3, "0");
+            if (window.GURUJI_RAGHAVAN_YT && window.GURUJI_RAGHAVAN_YT[tivKey]) {
+              const gurujiUrl = Array.isArray(window.GURUJI_RAGHAVAN_YT[tivKey])
+                ? window.GURUJI_RAGHAVAN_YT[tivKey][0]
+                : window.GURUJI_RAGHAVAN_YT[tivKey];
+              const a2 = document.createElement("a");
+              a2.className = "yt-link";
+              a2.href = gurujiUrl;
+              a2.target = "_blank";
+              a2.rel = "noopener noreferrer";
+              a2.setAttribute("aria-label", "YouTube (Guruji Raghavan): " + (s.title || ""));
+              a2.title = "YouTube (Guruji Raghavan)";
+              a2.style.marginLeft = "8px";
+              a2.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+                + '<path fill="#1E90FF" d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>';
+              ytCell.appendChild(a2);
+            }
+          } catch (e) {}
 
           tr.append(tiv, titleCell, ytCell);
           frag.appendChild(tr);
