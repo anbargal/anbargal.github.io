@@ -26,7 +26,8 @@ Then open <http://localhost:8000/> (or <http://localhost:8000/bhajan-lists.html>
 | `common.js` | Shared `BhajanLists` helpers (`get`/`save`/`clear`/`catalogUrl`/`recordVisit`) |
 | `data/thiruppugazh.js` | `Thiruppugazh.load()` — fetches and parses the song database |
 | `data/thiruppugazh.jsonl` | Song database (see `data/README.md` for the record schema) |
-| `data/README.md` | Song database schema and conventions |
+| `data/validate.py` | Stdlib-only validator for the song database (`python3 data/validate.py`) |
+| `data/README.md` | Song database schema, conventions, validator |
 
 ## Deployment
 

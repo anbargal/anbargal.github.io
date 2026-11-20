@@ -131,3 +131,30 @@
 - [x] No YouTube link available in database.
 - [x] Added link to dedicated performance video: https://www.youtube.com/watch?v=8F5k5qt-Mcg
 - Fix applied 2026-08-25.
+
+### TIV 62 — Orupozhuthum
+
+- [x] `thalam` was `"தாளம் : 1+1½+1+1½+1½+3"` — the `தாளம் :` label was included in the value. Fixed in the 2026-11-20 data rebuild.
+
+### TIV 432–441 — Commentary prose in lyrics
+
+- [x] These 10 songs had Tamil commentary (சொல் விளக்கம்) in `stanzas.charanams` instead of the actual lyrics. Ragam/thalam were also partly wrong (copied from unrelated songs), and `kshetram` was `null`.
+- [x] Rebuilt from kaumaram.com lyrics + thiruppugazh-nectar header rows. Correct ragam/thalam/kshetram now stored.
+- [x] English titles (`title_en`) were already present from the earlier batch onboarding; verified they match the transliterated Tamil title.
+
+### TIV 442–451 — One-off scrape artifacts, missing fields
+
+- [x] These 10 songs were onboarded with a one-off schema: `"charanam"` (singular, whole-page blog text as a single string) and `"youtubeId"` instead of `"stanzas"` and `"youtube"`. `title_en`, `kshetram`, and the proper `stanzas` structure were all missing.
+- [x] Rebuilt: `stanzas.charanams` = 1 line array per charanam (2–8 lines each), `title_en` set, `kshetram` set from kaumaram, `youtube` → `[]` for later backfill.
+- [x] TIV 443 title corrected from `குருத்தி புழல்` to `குருதி புலால்`.
+- [x] English titles (`title_en`) for 452–461 were added in the same pass.
+
+### TIV 432–461 — YouTube links
+
+- [x] These 30 songs had no YouTube links (or, for 452–461, were in the `[]` state). Mapped from channel upload enumeration (611 videos from `@KalakadThiruppugazhNSMani`) by matching `Amudha Thirupugaz padalgal nnn` titles.
+- [x] Each link confirmed via oEmbed API (channel + title) before storing.
+- [x] TIV 494: corrected from the "Padalgal 1 to 50" compilation (`nhMmIlz6Suc`) to its dedicated performance video (`HHd_1ZOZVps`).
+
+### TIV 402–431 — Normalised santham omission
+
+- [x] These 30 songs had `"santham": []` in `stanzas`. Removed the key entirely (the schema treats `santham` as optional; `[]` is not a valid empty-state).
