@@ -53,6 +53,15 @@
 
 ## Resolved
 
+### TIV 47 — Munaichang Kolidu
+
+- [x] Was silently skipped during the manual TIV 45-50 onboarding (Aug 2026): the commits went 45+46 → 48 → 49+50, and no validator rule checks for gaps in the TIV sequence.
+- [x] Onboarded 2026-11-28 from the thiruppugazh-nectar page for TIV 47 (`2013/02/munaichchangolidu.html`), cross-checked line by line against kaumaram.
+- [x] Kaumaram index resolved: **29** (`nnt0029_u.html`). Note kaumaram files this song under a different opening line ("அனிச்சம் கார்முகம்") and prepends two charanams (அனிச்சங் கார்முகம் … நெறிபாரா) that the nectar page marks `(நீக்குக)` — those are **not** part of TIV 47 and are not stored.
+- [x] Charanam order follows the TIV source (முனைச்சங், முளைக்குஞ், தினைச்செங், சிறக்குந், வினைச்சண், விகற்பங்). Kaumaram orders them as வினைச்சண், விகற்பங், முனைச்சங் … சிறக்குந் (which ends on பெருமாளே); the nectar page underlines the last two, suggesting an editorial addition. Worth a book check.
+- [x] Ragam காபி / thalam `1½ + 6` from the nectar header; kshetram திருச்செந்தூர் (kaumaram 29 is a thiruchchendhUr song).
+- [x] YouTube: "Amudha Thirupugaz padalgal 047" — https://www.youtube.com/watch?v=9HFRuq9cY20
+
 ### TIV 110 — Niraimathi Mugamenum
 
 - [x] No dedicated performance video exists on the Kalakad Thiruppugazh N.S. Mani channel.
