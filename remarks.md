@@ -65,12 +65,11 @@
 - [x] YouTube link was missing after batch onboarding of TIV 91-115.
 - [x] Added link to dedicated performance video: https://www.youtube.com/watch?v=CCqdWeTVNNA
 - Fix applied 2026-08-24.
-- **REVIEW NEEDED**: Cross-check and verify:
-  - Kaumaram index (currently null)
-  - Ragam (தர்பாரி கானடா) and Thalam (ஆதி - எடுப்பு 3/4 இடம்)
-  - Kshetram (சுவாமிமலை)
-  - YouTube video matches the song
-  - Lyrics accuracy in all charanams
+- [x] Record was accidentally deleted in `c4bff10` ("Onboard TIV 432-441") and restored from git on 2026-11-28.
+- [x] Kaumaram index resolved: **1326** (`nnt1326_u.html`, "ஓருரு வாகி — திருவெழுகூற்றிருக்கை"). All 28 stored lines match the kaumaram text verbatim (9 charanams, no santham); the trailing period on the last line was added to match the source.
+- [x] Ragam (தர்பாரி கானடா) and Thalam (ஆதி - எடுப்பு 3/4 இடம்) confirmed against the thiruppugazh-nectar page (`2015/03/oruruvaagiya.html`).
+- [x] Kshetram சுவாமிமலை confirmed — kaumaram files the song under ஏரகம் / திருவெழுகூற்றிருக்கை, i.e. Swamimalai.
+- [x] YouTube video confirmed: "Amudha Thirupugaz padalgal 113" on the Kalakad Thiruppugazh N.S. Mani channel.
 
 ### TIV 117 — IrumalurOga
 
